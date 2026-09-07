@@ -1,0 +1,67 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls ./pm-profile:*)",
+      "Read(./pm-profile/**)",
+      "Read(./CLAUDE.md)",
+      "Edit(./pm-profile/**)",
+      "Write(./pm-profile/**)",
+      "Bash(textutil:*)",
+      "Bash(cp ./pm-profile:*)",
+      "Bash(unzip -p:*)",
+      "Bash(ls ./job-pipeline:*)",
+      "Read(./job-pipeline/**)",
+      "Edit(./job-pipeline/**)",
+      "Write(./job-pipeline/**)",
+      "Bash(bash .claude/pipeline.sh:*)",
+      "Bash(.claude/pipeline.sh:*)",
+      "Bash(python3 .claude/show-pipeline.py:*)"
+    ],
+    "deny": [
+      "Bash(git:*)",
+      "Bash(gh:*)",
+      "Bash(rg:*)",
+      "Bash(tree:*)",
+      "Read(./.git/**)",
+      "Read(./.github/**)",
+      "Glob",
+      "Grep"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/boot.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/boot.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/boot.sh\""
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash .claude/statusline.sh",
+    "padding": 0
+  }
+}
