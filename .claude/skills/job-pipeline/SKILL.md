@@ -1,11 +1,11 @@
 ---
 name: job-pipeline
-description: Maintain job-pipeline/ as the single source of truth for every role the user is tracking. Three operations only - create an entry, update a status, print the pipeline. Use when the user picks the pipeline menu option, asks where things stand, or reports news on a role (applied, heard back, interview booked, rejected, offer). Other skills call this one to record what they produce; it does not assess fit, tailor CVs, or prep interviews itself.
+description: Maintain job-pipeline/ as the single source of truth for every role the user is tracking. Three operations only - create an entry, update a status, publish the pipeline board. Pipeline state is never printed into the conversation; it is shown only as the published board artifact. Use when the user picks the pipeline menu option, asks where things stand, or reports news on a role (applied, heard back, interview booked, rejected, offer). Other skills call this one to record what they produce; it does not assess fit, tailor CVs, or prep interviews itself.
 ---
 
 # Job pipeline
 
-Bookkeeping for `job-pipeline/`. It records state; it does not judge roles. Fit assessment belongs to `role-fit`, company and product research to `company-research`, interview material to `interview-prep`, CV work to `tailor-resume`, letters to `cover-letter` — this skill stores what they produce and keeps the status straight.
+Bookkeeping for `job-pipeline/`. It records state; it does not judge roles. And it never renders that state into the conversation — the only display surface for the pipeline is the board artifact published by `pipeline-artifacts`. Fit assessment belongs to `role-fit`, company and product research to `company-research`, interview material to `interview-prep`, CV work to `tailor-resume`, letters to `cover-letter` — this skill stores what they produce and keeps the status straight.
 
 ## Files
 
@@ -40,7 +40,7 @@ One vocabulary. Every entry has exactly one status from this list, written as th
 
 **The table is derived from the status, never chosen separately.** When a status changes, move the row in the same edit. A `Rejected` row sitting in Active is a bug, not a judgement call — check this on every write.
 
-**Ageing.** An `Applied` row whose `As of` date is more than 60 days old becomes `Lapsed` and moves to Closed. Apply this on every operation that touches the index, append a `History` line to each affected role file reading `<date> — Lapsed — aged out, no response in 60 days`, and report the count in one line. Without it the Active table silently fills with dead applications and stops meaning anything. Ageing is the one status change made without asking; everything else needs the user or a calling skill to say so.
+**Ageing.** An `Applied` row whose `As of` date is more than 60 days old becomes `Lapsed` and moves to Closed. Apply this on every operation that touches the index, append a `History` line to each affected role file reading `<date> — Lapsed — aged out, no response in 60 days`, and report the count in one line (a count, not a list of the rows). Without it the Active table silently fills with dead applications and stops meaning anything. Ageing is the one status change made without asking; everything else needs the user or a calling skill to say so.
 
 ## Index format
 
@@ -98,7 +98,8 @@ Needs role title and company. Location, link, and the JD text are taken if offer
 
 1. Write `job-pipeline/<company>-<role-slug>.md`, pasting the JD verbatim if supplied. Never paraphrase a JD — other skills read it later.
 2. Add the index row, table chosen by status. Default `Shortlisted` unless the user says otherwise.
-3. Confirm in one line, naming the file.
+3. Refresh the board — `overview.md` changed, so run Operation 3.
+4. Confirm in one line, naming the file, plus the board link.
 
 If an entry for that company and role already exists, say so and update it instead of creating a duplicate.
 
@@ -106,25 +107,20 @@ If an entry for that company and role already exists, say so and update it inste
 
 1. Set the new status in the role file, update **As of**, append a `History` line saying what happened.
 2. Update the index row, and move it if the new status belongs to a different table.
-3. Confirm in one line: old status → new status.
+3. Refresh the board — `overview.md` changed, so run Operation 3.
+4. Confirm in one line: old status → new status, plus the board link.
 
 Free text the user gives you ("CEO round went OK, decision next week") goes in the History line and `Next action`. It never goes in the Status cell.
 
-## Operation 3 — print the pipeline
+## Operation 3 — publish the pipeline board
 
-Run the renderer, then **reproduce its output verbatim in your reply**. Use exactly this command — a relative path, no quoting, no `cd`, no absolute path. An absolute path here contains an escaped space and triggers a permission prompt:
+This replaces printing. There is no terminal renderer and no inline table: the pipeline is shown to the user as a published Artifact page and nothing else.
 
-```
-bash .claude/pipeline.sh
-```
+1. Apply the ageing rule first, so the board reflects it.
+2. Invoke the `pipeline-artifacts` skill, Operation 2. It reads `job-pipeline/overview.md`, renders the three tables, redeploys to the board's existing URL (`job-pipeline/.pipeline-artifact-url`), and hands back the link.
+3. Give the user that link. One line. Nothing around it — no tables, no counts beyond the ageing line, no summary, no ranking, no "you have four active roles".
 
-`--md` emits markdown tables. Paste them straight into your response so the user reads them inline without expanding a tool call. Do not summarise, reorder, or drop columns, and do not wrap them in a code fence — they are meant to render as tables.
-
-`bash .claude/pipeline.sh` with no flag gives the colour terminal version instead. That is for the user to run themselves; never use it as the answer, because colour is lost the moment you retype it.
-
-It reads `job-pipeline/overview.md` and prints all three tables with colour-coded status pills, an age tag on every `As of`, and overdue `Next action` dates in red. `Applied` rows past 60 days are flagged `!` — those are the ones the ageing rule turns into `Lapsed`.
-
-Add no commentary, summary, or ranking around it. Only fall back to printing the markdown tables yourself if the script fails, and say that it failed.
+If publishing fails, say that it failed and why, in one line. **Do not fall back to pasting the tables** — a retyped index in the transcript is exactly what the board replaces, and a stale one is worse than no answer. Offer to retry instead.
 
 If `job-pipeline/` has no index yet, say so in one line and offer to start one.
 
@@ -136,4 +132,4 @@ Other skills use this one rather than writing to `job-pipeline/` themselves, so 
 - an entry created for a role they have just taken in;
 - a status advanced after something happened.
 
-Do that one thing and hand control back. Do not print the pipeline, assess a role, or suggest next steps when called this way — the calling skill is mid-task.
+Do that one thing and hand control back. Do not publish the board, assess a role, or suggest next steps when called this way — the calling skill is mid-task and owns the board refresh at the end of its own flow (skip step 3 of Operations 1 and 2).

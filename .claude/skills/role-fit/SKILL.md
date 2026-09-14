@@ -53,17 +53,23 @@ Then, in this order:
 
 6. **What to Expect in the Process** (when the verdict is Apply or Take the call) — likely probes, questions to prepare for, what to lead with. Skip this section entirely on a clean "do not apply", there's no process to prep for.
 
-7. **Record to Job Pipeline** — a checklist. Always includes adding the role to `job-pipeline/overview.md` if it doesn't exist create one. Structure the entries  (Applied — Active if already submitted, Assessed — Not Applied otherwise) with a one-line summary of the verdict and reasoning.
+## 6. Publish and record
 
-## 5. What this skill never does
+Do these in order — the artifact URL from step 1 is needed for step 2:
+
+1. **Publish the assessment artifact** — invoke the `pipeline-artifacts` skill, Operation 1, with the path to the fit-assessment file just written. It publishes/updates the Artifact page and hands back its URL.
+2. **Record to Job Pipeline** — add the role to `job-pipeline/overview.md` if it doesn't exist, create one. Structure the entry (Applied — Active if already submitted, Assessed — Not Applied otherwise) with a one-line summary of the verdict and reasoning, and use the URL from step 1 as this row's **File**-column link.
+3. **Publish the pipeline board** — invoke the `pipeline-artifacts` skill, Operation 2, now that `overview.md` has changed. It reads `overview.md` itself, republishes the board, and shares the link with the user directly — nothing further needed from this skill. Do not also print the pipeline, or any part of it, into the reply; the board is the only view of it.
+
+## 7. What this skill never does
 
 - Never invents a qualification, metric, or experience Mila doesn't have to make a fit look stronger, that's what the Honest Gap Assessment is for.
 - Never softens a stated hard requirement into a maybe because the rest of the fit is strong. A confirmed knockout (a language fluency requirement she doesn't meet, a citizenship-gated clearance, an onsite requirement in a country outside her stated relocation scope) ends the assessment cleanly, however good everything else looks, that's a feature of the process, not a failure to find a workaround.
 - Never assumes the current search-strategy calibration without checking the latest strategy file, "apply to everything" and "pause cold Director-level applications" have both been the right call at different points in this search.
 
-## 6. Close the loop
+## 8. Close the loop
 
-- Add the role to `roles/00-pipeline.md` in the correct table with a concise, honest summary, this is the single most important close-the-loop step, it's how every other conversation in this project knows this role was assessed.
+- The role must be in `job-pipeline/overview.md` in the correct table with a concise, honest summary (step 6 above), and the board republished — this is the single most important close-the-loop step, it's how every other conversation in this project knows this role was assessed. Recorded on disk and visible on the board; never recapped as a table here.
 - If domain is unfamiliar and the verdict is Apply or conditional, suggest running `company-research` next, deep company/product research strengthens both the cover letter and any later interview prep.
 - If the verdict is Apply, offer to run `cv-tailor` and `cover-letter` next, don't run them automatically, the verdict itself is often worth a pause for Mila to react to first.
 - If this assessment corrects something a related document already claims (a competitor list in `company-product-analysis.md`, a scope assumption in `roles/target-companies.md`), fix it there too rather than leaving two documents disagreeing.

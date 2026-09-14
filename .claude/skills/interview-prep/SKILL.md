@@ -42,7 +42,7 @@ Never dump the entire question bank regardless of mode or stage.
    - A short "questions user should ask them" section — tailored to genuine open threads from the fit assessment or prior conversation (e.g. compensation/funding stage questions flagged as open, or a follow-up on something the contact already said)
    - If there's a known gap flagged in the fit assessment likely to surface at this stage, name it plainly with the honest bridging line already drafted — don't leave user to improvise a gap answer live for the first time in the room
 
-5. **Update the pipeline/tracker if useful**, but this skill's job is the prep doc — not re-running the fit assessment or outreach steps, which are separate.
+5. **Update the pipeline/tracker if useful** — via the `job-pipeline` skill, which republishes the board rather than printing it — but this skill's job is the prep doc — not re-running the fit assessment or outreach steps, which are separate.
 
 ## Mode B — Live Mock Interview Practice
 

@@ -12,10 +12,7 @@
       "Bash(ls ./job-pipeline:*)",
       "Read(./job-pipeline/**)",
       "Edit(./job-pipeline/**)",
-      "Write(./job-pipeline/**)",
-      "Bash(bash .claude/pipeline.sh:*)",
-      "Bash(.claude/pipeline.sh:*)",
-      "Bash(python3 .claude/show-pipeline.py:*)"
+      "Write(./job-pipeline/**)"
     ],
     "deny": [
       "Bash(git:*)",
