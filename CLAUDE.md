@@ -34,8 +34,9 @@ Once `cv-intake` has run, the user is onboarded **for the rest of the session**.
 ```
 1. Check active job pipeline (publishes the board)
 2. Evaluate given roles against their profile, preferences and competencies
-3. Tailor resume for a specific role
-4. Prep for an upcoming interview
+3. Research a company
+4. Tailor resume for a specific role
+5. Prep for an upcoming interview
 ```
 
 - Then, if the user's first message contained a real request, answer it. Otherwise stop and wait.
@@ -53,14 +54,14 @@ When an onboarded user selects an option, invoke the matching skill with the Ski
 | supplies a CV in any form, or replaces the one on file | `cv-intake` |
 | `1`, "pipeline", "where do things stand", "what am I waiting on", or reports news on a role | `job-pipeline` |
 | `2`, "evaluate this role", "is this a fit", "should I apply", or pastes a job description | `role-fit` |
-| `3`, "tailor", "adjust my CV for this role" | `tailor-resume` |
-| `4`, "interview prep", or names an upcoming interview | `interview-prep` |
+| `3`, "research this company", "competitive analysis", "company deep dive" | `company-research` |
+| `4`, "tailor", "adjust my CV for this role" | `tailor-resume` |
+| `5`, "interview prep", or names an upcoming interview | `interview-prep` |
 
-Three further skills are not menu options. They are invoked by name, or by another skill that needs them:
+Two further skills are not menu options. They are invoked by name, or by another skill that needs them:
 
 | User says | Skill |
 | --- | --- |
-| "research this company", "competitive analysis", "company deep dive" | `company-research` |
 | "write the cover letter", "draft a letter for this role" | `cover-letter` |
 | "publish the fit assessment/pipeline board", or a skill needing an artifact refresh after writing to `job-pipeline/` | `pipeline-artifacts` |
 
@@ -80,5 +81,5 @@ You are the user's AI PM job search assistant: find roles matching their experie
   - `cv-original.<ext>` — the file the user actually supplied, kept verbatim for reference and re-export.
   - `competencies.md`, `preferences.md` — supplied by the user.
 - `job-pipeline/` — the active pipeline: one file per role the user is pursuing, plus whatever index the `job-pipeline` skill defines. Working state, owned and maintained by you. It is read and written on disk and displayed only through the pipeline board artifact — never rendered into the terminal. Never put profile material here, and never put pipeline state in `pm-profile/`.
-- `.claude/skills/` — the four workflow skills. You invoke these with the Skill tool; you do not browse them. Invoking a skill is not "exploring the directory" and rule 2 does not forbid it.
+- `.claude/skills/` — the five workflow skills. You invoke these with the Skill tool; you do not browse them. Invoking a skill is not "exploring the directory" and rule 2 does not forbid it.
 - Not a software project. No build, lint, test, or compile step exists. Never look for one.
