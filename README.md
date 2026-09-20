@@ -73,7 +73,7 @@ Eight skills in `.claude/skills/`. Six are menu options; `cv-intake` fires whene
 
 | Skill | Triggered by | What it produces |
 | --- | --- | --- |
-| **cv-intake** | Supplying a CV in any form | `pm-profile/cv.md` (canonical text), `cv-original.<ext>` (verbatim), and `level.md` (your `<level-slug>`, deduced from titles and described scope). Sanity-checks the extraction before saving, so a silently mangled PDF cannot poison everything downstream. |
+| **cv-intake** | Supplying a CV in any form | `pm-profile/cv.md` (canonical text), `cv-original.<ext>` (verbatim), and the **Level** section of `competencies.md` (your `<level-slug>`, deduced from titles and described scope). Sanity-checks the extraction before saving, so a silently mangled PDF cannot poison everything downstream. Then offers to build the rest of `competencies.md` and `preferences.md` with you. |
 | **job-pipeline** | `1`, "where do things stand", or news on a role | The index and role files under `job-pipeline/`. Owns one status vocabulary, and derives the table from the status so a rejected role cannot sit in Active. |
 | **role-fit** | `2`, a pasted posting, "should I apply" | `fit-assessment.md`: role deconstruction, preference screen, dimension-by-dimension fit, honest gaps, bridging language, verdict. The foundation document every other skill reads first. |
 | **company-research** | `3`, "research this company" | `company-product-analysis.md`: product, market, competitors, business model, org signals. Enough to answer "tell me about our product" in an interview. |
@@ -155,9 +155,8 @@ URLs are tracked in `*-artifact-url.txt` siblings next to each document, so noth
 pm-profile/                     you — slow-changing, read-mostly, gitignored
 ├── cv.md                       canonical CV text. Every skill reads this.
 ├── cv-original.<ext>           the file you supplied, verbatim
-├── competencies.md             self-rated pillars + calibration notes
-├── preferences.md              comp floor, role shape, deal-breakers, screening rules
-└── level.md                    <level-slug>: the level deduced from the CV, plus your target
+├── competencies.md             <level-slug> (current + target) then self-rated pillars
+└── preferences.md              comp floor, role shape, deal-breakers, screening rules
 
 job-pipeline/                   working state — owned by the assistant, gitignored
 ├── overview.md                 the index: three tables, one status vocabulary
@@ -222,7 +221,7 @@ Reads and writes to `pm-profile/` and `job-pipeline/` are pre-allowed, so the wo
 
 **Change what gets screened.** Edit `pm-profile/preferences.md`. The **Screening rules** section is applied mechanically in every assessment, so changing a rule there changes every future verdict. Tell the assistant afterwards, since a changed deal-breaker can invalidate a verdict already on the board.
 
-**Correct your level.** `pm-profile/level.md` holds one slug from a fixed vocabulary (`senior-ic`, `staff-ic`, `tech-lead`, `eng-manager`, …), deduced from your CV, plus the target level you are aiming at. `role-fit` compares every posting's implied level against it and flags under-levelled roles and stretches; `interview-prep` holds its grading bar there. Edit the file if the deduction is wrong, and the correction propagates everywhere.
+**Correct your level.** The **Level** section at the top of `pm-profile/competencies.md` holds one slug from a fixed, function-neutral vocabulary (`senior-ic`, `staff-ic`, `principal-ic`, `lead-ic`, `people-manager`, …) describing scope and headcount rather than a discipline, deduced from your CV, plus the target level you are aiming at. `role-fit` compares every posting's implied level against it and flags under-levelled roles and stretches; `interview-prep` holds its grading bar there. Edit that section if the deduction is wrong, and the correction propagates everywhere.
 
 **Recalibrate how claims are weighted.** `pm-profile/competencies.md` holds self-rated pillars plus calibration notes, for example "lead with inference and serving, not reliability". Assessments obey those notes.
 

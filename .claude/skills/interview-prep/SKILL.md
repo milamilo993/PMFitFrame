@@ -14,7 +14,7 @@ Never dump the entire question bank regardless of mode or stage.
 
 ## Reference library — the book behind the questions
 
-This skill does not invent interview questions from memory. It runs off a **book**: one or more interview guides sitting in `.claude/skills/interview-prep/docs/` as `.md` files extracted from the source PDF, carrying `<!-- page N -->` markers. The book supplies the question bank and the grading rubric; the user's own files (`fit-assessment.md`, `cv.md`, `competencies.md`, `level.md`) supply the calibration. Both modes draw on it.
+This skill does not invent interview questions from memory. It runs off a **book**: one or more interview guides sitting in `.claude/skills/interview-prep/docs/` as `.md` files extracted from the source PDF, carrying `<!-- page N -->` markers. The book supplies the question bank and the grading rubric; the user's own files (`fit-assessment.md`, `cv.md`, and `competencies.md`, which carries the `<level-slug>` in its Level section) supply the calibration. Both modes draw on it.
 
 **What ships.** The repo ships with *The Heap Book of Questions*, a free interview question guide, plus whatever else the user has added. That is the default bank. This project was originally built against *Cracking the PM Interview* (McDowell & Bavaro) and *Decode & Conquer* (Lewis Lin) — both paid books, neither redistributable, so no condensation of them is in this repo. Never cite them as though they were on disk.
 

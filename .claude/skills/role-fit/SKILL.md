@@ -19,7 +19,7 @@ If given a URL, fetch it. If the fetch returns only a title (common on JS-render
 ## 3. Read first
 
 - `pm-profile/cv.md` as the source of truth for experience, protected metrics, current employment status (check fresh each time, don't assume from a prior assessment)
-- `pm-profile/level.md` for `<level-slug>`, the level deduced from the CV by `cv-intake`, plus the target level if one is set. Read it before judging seniority fit — never re-derive the level yourself, and never assume it from the posting's title
+- the **Level** section of `pm-profile/competencies.md` for `<level-slug>`, the level deduced from the CV by `cv-intake`, plus the target level if one is set. Read it before judging seniority fit — never re-derive the level yourself, and never assume it from the posting's title
 - `pm-profile/competencies.md` for self-rated pillar scores to calibrate how much evidence backs a given claim, read against the `<level-slug>` in its header
 - `pm-profile/preferences.md` for stated preferences ("What I'm Looking For") in the next role, to check whether the posting actually meets them or not, and to surface any misalignment in the write-up 
 - The recent entries in the job-pipeline and the `job-pipeline/strategy.md` if exists, both for prior applications to this exact company (a previous rejection or no-response is a real data point, not noise) and for patterns already established across the search (a repeated language knockout, a repeated domain gap, a repeated "do not apply" reason) that this role might repeat
@@ -73,7 +73,7 @@ Then, in this order:
 
 2. **Fit Analysis** — lettered subsections (a, b, c...), pick the dimensions that actually matter for this posting rather than a fixed checklist. Common ones seen across this project: domain/industry fit, seniority/scope fit, execution fit, technical/architecture fit, AI/ML fit, leadership/stakeholder fit, financial/commercial fit, culture/environment fit, language/logistics requirements. Each gets a **Reasoning:** paragraph (grounded in specific, named evidence from the profile, not generic claims) and a one-line **Verdict:**.
 
-   **Seniority is judged against `<level-slug>`, not against the posting's title.** Work out the level the posting's *described scope* implies, then compare it to the current `<level-slug>` from `pm-profile/level.md`, and to the target level if one is set. Three outcomes, each handled differently:
+   **Seniority is judged against `<level-slug>`, not against the posting's title.** Work out the level the posting's *described scope* implies, then compare it to the current `<level-slug>` from the **Level** section of `pm-profile/competencies.md`, and to the target level if one is set. Three outcomes, each handled differently:
 
    - **Posting below `<level-slug>`** — an under-levelled role. Not a knockout by itself, but name it: it predicts a lower band, a narrower remit, and a retention probe in the interview. Say plainly that the title reads a step down and that the scope, not the title, is what would have to justify it.
    - **Posting at `<level-slug>`** — a lateral move. Then the question is whether it advances the target level, and if it does not, say so; a lateral move that also narrows the domain is worth naming as a direction change rather than a step.
