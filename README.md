@@ -1,8 +1,20 @@
 # PMFitFrame
 
-A Claude Code project that runs a technical job search end to end: it reads your CV once, screens roles against what you actually said you want, writes the assessment, tailors the CV, drafts the letter, preps the interview, and keeps a pipeline board you can share as a link.
+PMFitFrame is a Claude Code assistant which supports PMs in the pursuit of their next role.
 
-It is not a chatbot that gives job search advice. It is a set of skills with hard rules, a state directory on disk, and a strong bias against telling you what you want to hear.
+
+
+
+
+
+
+
+
+
+All it takes is to give it your CV, you then help it to quickly establish your preferences and competencies (according to Ravi Mehta framework) and from then on it scales  your job pursuit. 
+
+It screens roles against what you actually said you want, writes honest role fit assessment, tailors the CV, drafts the letters, preps you the interview, and keeps a pipeline board published as claude html artifact to keep you organized.
+
 
 <!-- SCREENSHOT: the pipeline board artifact, full page -->
 ![Pipeline board](docs/screenshots/01-pipeline-board.png)
@@ -39,13 +51,15 @@ This project is built to fail differently:
    ```
    It extracts the text and saves `pm-profile/cv.md` plus the original.
 5. **Review your competencies.** The system analyzes your CV against the Ravi Mehta framework (12 competencies across 4 areas), presents its findings, and asks you to validate or adjust. Based on your CV + demonstrated competencies, it deduces your seniority level. This builds `pm-profile/competencies.md` (with both your level and competencies assessment).
-6. **Paste a job description.** You get a fit assessment grounded in your level + competencies, a published page, and a pipeline entry.
+And that's the whole onboarding!
 
-That is the whole onboarding. Everything else is optional depth.
-
-<!-- SCREENSHOT: first session — the welcome line, then the CV intake summary -->
+From then on you are taken through the options:
+<!-- SCREENSHOT: main menu-->
 ![First session](docs/screenshots/02-first-session.png)
 
+Where Building application materials presents you with following:
+<!-- SCREENSHOT: Build application materials -->
+![First session](docs/screenshots/02-first-session-2.png)
 ---
 
 ## How a session starts
@@ -60,15 +74,6 @@ A `SessionStart` hook (`.claude/boot.sh`) checks `pm-profile/` in shell **before
 - `competencies.md` — your seniority level (deduced by `competencies` skill based on CV + demonstrated competencies) and your 12-competency assessment against the Ravi Mehta framework (created by `competencies` skill after `cv-intake`)
 - `preferences.md` — your comp floor, role preferences, deal-breakers (filled in with you, optional)
 
-
-```
-1. Check active job pipeline (publishes the board)
-2. Evaluate given roles against their profile, preferences and competencies
-3. Research a company
-4. Tailor resume for a specific role
-5. Write a cover letter for a specific role
-6. Prep for an upcoming interview
-```
 
 A bare number still works if you type one, and so does "where do things stand", "should I apply to this", or a pasted posting.
 
@@ -115,29 +120,41 @@ Eight skills in `.claude/skills/`. Six are menu options; `cv-intake` fires whene
 What using this actually looks like, in order:
 
 ```
-paste a Clojure role          → verdict: do not apply. No AI/ML in scope (your stated
-                                 deal-breaker) and no functional-JVM experience against a
-                                 hard requirement. Closed, with the reasoning kept.
+paste a Principal PM posting   → verdict: do not apply. The role is 70% delivery
+at a Series B fintech            management against a stated deal-breaker, and the
+                                 scope reads a level below the title. Closed, with
+                                 the reasoning kept.
 
-paste an AI engineering role   → verdict: apply, but in this order — ask for the salary
-                                 range before building the demo they require, because the
-                                 demo costs two weeks and comp is the one gap effort
-                                 cannot close.
+paste a Group PM posting at    → verdict: apply. Strong on product strategy and
+an AI infrastructure company     customer insight; the honest gap is managing
+                                 managers. Lead with the platform re-architecture
+                                 and the 0→1 launch, not headcount.
 
-"adjust my cv and write the    → tailored CV, letter, and the range email. The letter's
- cover letter"                   claim about a demo you had not built yet gets removed,
-                                 with a note saying what to add once it exists.
+"research them before I        → company-product-analysis.md: what they actually
+ write anything"                 sell, who they lose deals to, and why this role
+                                 exists now. Published as its own page.
 
-"I sent the range email"       → status advances, board refreshes.
+"tailor the cv and write the   → tailored CV leading with platform and 0→1 work,
+ cover letter"                   and a letter that names the people-management gap
+                                 instead of writing around it. A line claiming P&L
+                                 ownership gets cut — your CV does not show it.
 
-"they can meet my expectations,→ assessment updated (and the wrong call in it named as
- HR chat soon"                   wrong), prep doc written and published, status to
-                                 Screening.
+"applied"                      → role file created, status Applied, board refreshes.
 
-"run the mock interview"       → one question at a time, graded, rebuilt in your voice.
+"recruiter screen Thursday"    → status to Screening, prep doc written and published:
+                                 questions to expect, questions to ask, each one
+                                 traceable to a page in the question book.
+
+"the band is above my floor"   → assessment updated, and the earlier "comp is the
+                                 gap" call named as wrong rather than quietly edited.
+
+"run the mock interview"       → one question at a time, graded against the bar for
+                                 your level, rebuilt in your voice.
 ```
 
-The through-line: it sequences work by cost, tells you when your own stated preferences rule something out, and records what it got wrong instead of quietly editing history.
+The through-line: it screens against the preferences you actually stated, sequences the
+expensive work behind the cheap answer, refuses to write what your CV does not support,
+and records what it got wrong instead of quietly editing history.
 
 <!-- SCREENSHOT: a fit assessment artifact, showing the verdict block and the gap table -->
 ![Fit assessment](docs/screenshots/03-fit-assessment.png)
@@ -235,25 +252,3 @@ Reads and writes to `pm-profile/` and `job-pipeline/` are pre-allowed, so the wo
 
 **Recalibrate how claims are weighted.** `pm-profile/competencies.md` holds self-rated pillars plus calibration notes, for example "lead with inference and serving, not reliability". Assessments obey those notes.
 
----
-
-## Honest notes
-
-- **The artifacts are the interface.** Pipeline state is deliberately unavailable in the terminal. If that sounds annoying, it is the point: a retyped table in scrollback goes stale the moment anything changes.
-- **A cover letter is a cold-channel tool.** Where a warm introduction exists, the letter is the weaker path and the skill says so rather than overselling itself.
-- **Prep docs cite the book, not memory.** Interview questions and frameworks come from the extracted books in `interview-prep/docs/` with page numbers, so you can check them. The shipped book is free (*The Heap Book of Questions*); the paid guides this project was originally built on are not included, and the quality of the prep tracks the quality of the book you put in.
-- **A narrow profile produces a thin pipeline.** If your preferences encode a hard comp floor and a domain requirement, most roles will be screened out, and the board will look empty. That is the filter working, not the assistant idling.
-
----
-
-## Screenshots to add
-
-Drop images at these paths and the README picks them up:
-
-| Path | What to capture |
-| --- | --- |
-| `docs/screenshots/01-pipeline-board.png` | The pipeline board artifact, full page |
-| `docs/screenshots/02-first-session.png` | A fresh session: welcome line, then the CV intake summary |
-| `docs/screenshots/03-fit-assessment.png` | A fit assessment page: verdict block and gap table |
-| `docs/screenshots/04-interview-prep.png` | A prep page at phone width |
-| `docs/screenshots/05-mock-interview.png` | The live mock: a question, an answer, the grading |
