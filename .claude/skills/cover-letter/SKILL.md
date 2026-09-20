@@ -1,59 +1,73 @@
 ---
 name: cover-letter
-description: Use this skill whenever user needs a cover letter drafted for a specific role. Bridges her five core motivations to the specifics of the posting, following the structural pattern already consistent across every cover letter drafted in this project. Triggers on "write a cover letter", "draft a cover letter for [company]", "cover letter for this role".
+description: Use this skill whenever the user needs a cover letter drafted for a specific role. Bridges the user's core motivations to the specifics of the posting, following one consistent structural pattern. Menu option 5; also invoked by name or by another skill. Triggers on "write a cover letter", "draft a cover letter for [company]", "cover letter for this role".
 ---
 
 # Cover Letter
 
-Drafts a cover letter for a specific role, grounded in user's fit assessment for that company and her stated motivations, not a generic template filled in with company name and title swapped.
+Menu option 5.
+
+Drafts a cover letter for a specific role, grounded in the fit assessment for that company and in the user's stated motivations, not a generic template with the company name and title swapped in.
 
 ## Read first
 
-- `applications/<location>/<company>/fit-assessment.md` if it exists, this is the primary source for what to lead with and which gap to name honestly. If it doesn't exist yet, say so and offer to run the fit-assessment step first, a cover letter written without it tends to read generic.
-- `applications/<location>/<company>/company-overview.md` if it exists, for specific, real detail to bridge into (a named product, a stated strategic direction, a market tailwind), not brochure-copy praise.
-- `profile/00-overview.md` for metrics and scope language to draw on.
+- `job-pipeline/applications/<company-slug>/fit-assessment.md` if it exists (written by `role-fit`). `<company-slug>` is the company folder defined by the `job-pipeline` skill: lowercase, hyphenated, no location and no role in it. This is the primary source for what to lead with and which gap to name honestly. If it doesn't exist yet, say so and offer to run `role-fit` first, a cover letter written without it tends to read generic.
+- `job-pipeline/applications/<company-slug>/company-product-analysis.md` if it exists (written by `company-research`), for specific, real detail to bridge into (a named product, a stated strategic direction, a market tailwind), not brochure-copy praise.
+- `job-pipeline/applications/<company-slug>/<role-slug>.md`, the role file, for the JD verbatim.
+- `pm-profile/cv.md` for scope language and metrics. Never re-parse `pm-profile/cv-original.*` when `cv.md` exists.
+- `pm-profile/preferences.md` and `pm-profile/competencies.md` if present, for what the user says they want and how strongly a claim is actually backed.
 
-## The five motivations
+## The user's motivations
 
-Every cover letter should draw on these, user's own stated framing for what she's motivated by. Not all five belong in every letter, in practice one or two carry the letter's central "what draws me to this" paragraph, and the rest surface only where the specific posting actually earns them, forcing all five into one letter reads as padding, not conviction.
+A cover letter should draw on the user's own stated framing for what motivates them, taken from `pm-profile/preferences.md` (and whatever they have said in-session), not from a generic list. Where that file doesn't state them, ask once and work from the answer.
 
-1. The opportunity to make a real impact, to shape the course of a product or an industry, not just execute someone else's plan
-2. Hard, complex problems and product spaces, ones that need to be properly scoped and understood before impact is possible, not vague or already-solved ones
-3. Ambitious goals and business aspirations, not a maintenance mandate
-4. The opportunity to work alongside great technical teams where excellence is expected at every step, not "good enough" engineering
-5. Room to develop and progress further once the role's initial goals are achieved, not a dead end once the first mandate is complete
+The pattern that holds regardless of the specific list: not every motivation belongs in every letter. One or two carry the letter's central "what draws me to this" paragraph, and the rest appear only where the posting actually earns them. Forcing all of them into one letter reads as padding, not conviction.
 
-Read the posting and the fit assessment for which of these the role actually substantiates, a role with an unscoped, ambiguous mandate earns #2 directly, a company at an inflection point or expansion phase earns #1 and #3, a "trio" or engineering-close structure earns #4, an early-stage or newly defined mandate earns #5. Don't claim a motivation the posting doesn't actually support.
+Typical shapes worth looking for in a posting: an unscoped, ambiguous mandate earns a "hard problems that need scoping" motivation; a company at an inflection point or expansion phase earns "real impact" and "ambitious goals"; an engineering-close or trio structure earns "strong technical teams"; an early-stage or newly defined mandate earns "room to grow past the first mandate." Don't claim a motivation the posting doesn't actually support.
 
 ## Before writing: check current employment status and tense
 
-user's Sportradar tenure ended July 2026 (`profile/00-overview.md`, "Most recent title/company"). Never write "I'm currently a Group Product Manager at Sportradar" or otherwise imply present employment there, use past tense ("Until July 2026, I was...", "Most recently, I was..."). Check this field fresh each time rather than assuming from a prior draft, if she changes roles again this will go stale the same way.
+Pull the most recent title and company fresh from `pm-profile/cv.md` every time, and check whether that role has ended. If it has, never imply present employment there, use past tense ("Until <month year>, I was...", "Most recently, I was..."). A prior draft is not a reliable source for this, it goes stale the moment the user changes roles.
 
 ## When the target title reads as a step down or sideways
 
-Several roles in this pipeline (Nettbil, Trackunit, CatalystOne) test at Senior PM level against a Group PM background, deliberately, per `roles/02-strategy-sept-2026.md` Priority 1. When that's the case, name it directly rather than hoping it goes unnoticed: one short paragraph stating plainly that title has never been the driver, what matters is the scope on offer (an area that needs defining and owning end to end, with real impact attached), and that this specific role's scope is a better match for what motivates her than a higher title with a narrower or already-defined mandate would be. Don't apologize for the title gap or over-explain it, state it once, directly, and move on.
+Some roles are worth testing at a level below the user's last title, deliberately. When that's the case, and the user has confirmed it is deliberate, name it directly rather than hoping it goes unnoticed: one short paragraph stating plainly that title has never been the driver, that what matters is the scope on offer (an area that needs defining and owning end to end, with real impact attached), and that this role's scope fits what motivates them better than a higher title with a narrower or already-defined mandate would. Don't apologize for the gap or over-explain it, state it once and move on.
 
-## The structural pattern (consistent across every letter drafted so far)
+## The structural pattern
 
-Confirmed across Intercom, DeepL, Monterro, and Zauber, four distinct roles, industries, and stages, all following the same five-part shape:
+Every letter follows the same five-part shape:
 
-1. **Opening hook.** Name the company's or role's actual problem in their own terms (not a generic "I'm excited about your mission"), then bridge immediately to a directly parallel problem user has already solved. The bridge should be concrete and specific, not "I have relevant experience."
-2. **Proof paragraph.** Current role, scope, and 2 to 4 hard metrics, drawn from `profile/00-overview.md`'s protected metrics (50% operational cost reduction, 5ppt margin capture, 60% latency reduction + 25% coverage expansion → 15% top-line growth, 100% governance-framework adoption). Real numbers, not adjectives.
-3. **"What draws me specifically" paragraph.** Names the actual sub-area or mandate of this role, not the company generically, and pulls in whichever of the five motivations above the posting genuinely earns. This is also where an honest gap gets named directly, not buried or omitted, the existing pattern never pretends a gap doesn't exist (Zauber: LLM-agent experience; DeepL: Identity/Console platform work; Monterro: no consulting background). Naming it directly and pairing it with what actually offsets it reads as more credible than avoiding it.
+1. **Opening hook.** Name the company's or role's actual problem in their own terms (not a generic "I'm excited about your mission"), then bridge immediately to a directly parallel problem the user has already solved. The bridge should be concrete and specific, not "I have relevant experience."
+2. **Proof paragraph.** Current or most recent role, scope, and 2 to 4 hard metrics drawn from `pm-profile/cv.md`. Use the numbers exactly as they appear there, never round, inflate, or re-derive them. Real numbers, not adjectives.
+3. **"What draws me specifically" paragraph.** Names the actual sub-area or mandate of this role, not the company generically, and pulls in whichever motivations the posting genuinely earns. This is also where an honest gap gets named directly rather than buried or omitted (for example: no experience with a named technology the JD asks for, no background in the target domain). Naming a gap directly and pairing it with what offsets it reads as more credible than avoiding it.
 4. **Logistics paragraph.** Location, relocation, and visa/work-authorization status, named plainly and upfront, never left for later in the process. If something is genuinely unclear (which office, whether a work permit is needed), say so directly rather than guessing.
 5. **Short close.** Sign-off, sometimes one line inviting the conversation. Never a restated summary of the letter.
 
 ## Tone and mechanics
 
-- First person throughout, never third person (project-wide rule, see `CLAUDE.md`).
-- No em or en dash as punctuation anywhere, use a comma instead (project-wide rule). A hyphen inside a compound word is fine.
-- Specific numbers beat adjectives every time, "50% operational cost reduction" not "significant cost savings."
-- Direct gap acknowledgment beats a dodge. The existing letters never pretend a listed requirement is already met when it isn't.
+- First person throughout, never third person. (The fit assessment is the opposite: it is written about the user in the third person.)
+- No em or en dash as punctuation anywhere, use a comma instead. A hyphen inside a compound word is fine.
+- Specific numbers beat adjectives every time, "cut operational cost by 50%" not "significant cost savings."
+- Direct gap acknowledgment beats a dodge. Never imply a listed requirement is met when it isn't.
+- Never invent a metric, employer, or responsibility that isn't in `pm-profile/cv.md`. Same rule as `tailor-resume`: if the posting wants something the profile doesn't show, ask the user whether it's true rather than writing around it.
 - Length: 4 to 6 paragraphs, roughly 350 to 500 words. Never pad to fill space.
-- Save as `applications/<location>/<company>/cover-letter.md` first, as a draft marked "awaiting approval before HTML/PDF conversion." Only convert to `.html`/`.pdf` once user has reviewed and approved the text.
 
-## An honest note on what "worked" actually means here
+## Save and close the loop
 
-Worth saying plainly rather than assuming: as of September 2026, none of the applications that progressed furthest in this search, Jotta and Bislab to a hiring-manager+ conversation, Ardoq through a full process to a final team call, GSFleet to an offer, went through a cover letter at all. Jotta and GSFleet were CV-only, Ardoq ran on a case study, Bislab on warm outreach. The funnel diagnosis in `roles/02-strategy-sept-2026.md` found channel (warm intro vs. cold), not application content, is the dominant factor in this search, cold applications convert at roughly 3% regardless of how strong the materials are.
+- Save as `job-pipeline/applications/<company-slug>/cover-letter.md`, marked as a draft awaiting approval. Only convert to `.html`/`.pdf` once the user has reviewed and approved the text. Name the file you wrote in one short line.
+- Tell `job-pipeline` (Operation 2) that a letter now exists for this role if it changes the status or the next action, rather than editing `overview.md` here.
+- If `overview.md` changed as a result, invoke `pipeline-artifacts` Operation 2 and hand the user the board link. Never print pipeline state into the conversation.
 
-So this pattern is the consistent structural and tonal approach user has settled on across every letter drafted, not a proven high-converting template. Keep using it because it's honest, specific, and well-calibrated, not because it's been shown to outperform warm intro or CV-only paths, it hasn't been tested against those directly. Where a warm path exists, lead with that per `roles/target-companies.md` and Priority 2 of the current strategy, a cover letter is the cold-channel fallback, not the primary lever.
+## An honest note on what a cover letter is worth
+
+Say this plainly when it's relevant rather than overselling the deliverable: a cover letter is a cold-channel tool. Where a warm introduction exists, that path converts far better and should lead. This structure is the consistent, honest, specific approach used across this project, not a proven high-converting template, and it has not been tested head to head against warm-intro or CV-only paths. Use it because it is calibrated and truthful, and check `job-pipeline/strategy.md` (if it exists) for the current read on which channel is actually working before assuming a letter is the right lever at all.
+
+## Tell me when you apply
+
+This skill produces material the user might act on without saying so. The pipeline only stays true if the moment of applying gets recorded, and nothing here can observe it happening.
+
+So end the reply with one short line asking them to say when they have applied, so the entry moves to Applied — Active with the date and the board stays accurate. One line, in the reply, not a paragraph and not a document section. Vary the wording; do not repeat a canned sentence every time.
+
+Ask only when applying is actually the next step for this role (an Apply or conditional-apply verdict, a CV or letter drafted, research done ahead of a submission). Skip it on a do-not-apply verdict, on a role already recorded as applied, and when the user has already told you in this session that they applied.
+
+When they do report it, that is a `job-pipeline` status update: record the date, move the entry, republish the board, hand back the link. A reported application also often carries the deadline, the channel used (cold, referral, recruiter), and whether they sent the letter, all worth capturing in the role file while it is fresh.

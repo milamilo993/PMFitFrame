@@ -9,7 +9,7 @@ Produces a grounded research document on a specific company and product before u
 
 ## When to run this
 
-- Before writing a fit-assessment.md for a new company, especially if the domain is unfamiliar
+- Before writing a `fit-assessment.md` for a new company, especially if the domain is unfamiliar
 - Before applying, if the goal is a sharper, more specific case for why this company
 - Before any interview stage past a recruiter screen, so user can speak to product positioning and competitive landscape without improvising live
 - Whenever user asks for "company research", "product research", "competitive analysis", or "help me understand what they build"
@@ -18,8 +18,8 @@ Produces a grounded research document on a specific company and product before u
 
 Ask if not already clear from context:
 - Company name and the specific role (title, team or domain if named)
-- Which application folder this belongs to (e.g. `applications/oslo/trackunit/`) — create it if it doesn't exist yet, following the existing `<location>/<company-slug>/` convention used elsewhere in this project
-- Whether a `fit-assessment.md` already exists in that folder. If so, read it first — it usually already has a first-pass company summary and named gaps. This research should deepen and correct that, not duplicate it from zero
+- Which company folder this belongs to: `job-pipeline/applications/<company-slug>/` — create it if it doesn't exist yet. `<company-slug>` is a URL-friendly version of the company name, lowercase and hyphenated, with no location and no role in it. This is the project-wide convention defined in the `job-pipeline` skill
+- Whether `fit-assessment.md` already exists in that folder. If so, read it first — it usually already has a first-pass company summary and named gaps. This research should deepen and correct that, not duplicate it from zero
 - Whether the JD is already available (pasted earlier in conversation, or saved in the folder) — use it to know which specific product area to go deep on. A generic company profile is far less useful than one weighted toward the actual team's product surface
 
 ## 2. Research
@@ -36,7 +36,7 @@ Don't stop at the marketing pitch. The bar is the same one user's own fit assess
 
 ## 3. Structure the output
 
-Write to `applications/<location>/<company>/company-product-analysis.md`. Use these sections, dropping any that don't apply and adding company-specific ones that do:
+Write to `job-pipeline/applications/<company-slug>/company-product-analysis.md`. This file is company-level and shared across every role at that company. Use these sections, dropping any that don't apply and adding company-specific ones that do:
 
 - **TL;DR pitch** — 3 to 4 sentences: what they do, how they make money, how they're positioned, in language user could say out loud in a meet-and-greet
 - **Company basics** — founded, size, funding or ownership structure, HQ, revenue if public
@@ -49,7 +49,7 @@ Write to `applications/<location>/<company>/company-product-analysis.md`. Use th
 - **Recent strategic signals** — funding, launches, leadership changes, public statements, each with a one-line read on what it tells you about current priorities
 - **Key tensions for a PM to know** — the real trade-offs this role will navigate daily. Usually the single most useful section for interview answers
 - **Org and culture signals** — team size, reporting line, work culture norms (especially where the local culture isn't English-default or has a strong brand identity), anything the JD or reviews reveal about how decisions actually get made
-- **What the role actually requires** — restate the JD's core mandate and the profile they're describing, then connect it back to `profile/00-overview.md` explicitly: where the fit is genuinely strong, where user would need to name and bridge a gap out loud
+- **What the role actually requires** — restate the JD's core mandate and the profile they're describing, then connect it back to `pm-profile/cv.md` explicitly: where the fit is genuinely strong, where user would need to name and bridge a gap out loud
 
 ## 4. Optional: styled HTML version
 
@@ -60,3 +60,13 @@ If user wants something easier to skim on a phone before a call, render the same
 - If no `fit-assessment.md` exists yet for this company, say so explicitly and offer to build one next. This research is the input; the fit assessment is the judgment call built on top of it
 - If a `fit-assessment.md` already exists and this research surfaces something that changes the read (a gap that's smaller or bigger than assumed, a location or comp detail, a competitive fact that strengthens or weakens the pitch), flag it directly rather than leaving the fit assessment quietly stale
 - Note that this document now exists so it's picked up naturally the next time `interview-prep` runs for this company
+
+## Tell me when you apply
+
+This skill produces material the user might act on without saying so. The pipeline only stays true if the moment of applying gets recorded, and nothing here can observe it happening.
+
+So end the reply with one short line asking them to say when they have applied, so the entry moves to Applied — Active with the date and the board stays accurate. One line, in the reply, not a paragraph and not a document section. Vary the wording; do not repeat a canned sentence every time.
+
+Ask only when applying is actually the next step for this role (an Apply or conditional-apply verdict, a CV or letter drafted, research done ahead of a submission). Skip it on a do-not-apply verdict, on a role already recorded as applied, and when the user has already told you in this session that they applied.
+
+When they do report it, that is a `job-pipeline` status update: record the date, move the entry, republish the board, hand back the link. A reported application also often carries the deadline, the channel used (cold, referral, recruiter), and whether they sent the letter, all worth capturing in the role file while it is fresh.

@@ -11,9 +11,21 @@ Bookkeeping for `job-pipeline/`. It records state; it does not judge roles. And 
 
 ```
 job-pipeline/
-├── overview.md             index — three tables, nothing else
-└── <company>-<role-slug>.md    one per role
+├── overview.md                        index — three tables, nothing else
+├── strategy.md                        optional, the current search-strategy read
+└── applications/<company-slug>/       one folder per company
+    ├── <role-slug>.md                 the role file, one per role at that company
+    ├── fit-assessment.md              written by role-fit
+    ├── company-product-analysis.md    written by company-research
+    ├── cover-letter.md                written by cover-letter
+    ├── cv.md                          written by tailor-resume
+    ├── interview-prep-<stage>.md      written by interview-prep
+    └── <name>-artifact-url.txt        published artifact URLs, written by pipeline-artifacts
 ```
+
+`applications/<company-slug>/` is the one rule every skill follows. `<company-slug>` is a URL-friendly version of the company name, lowercase, hyphenated, no location and no role in it. Create the folder on first write; nothing else in this project decides where a company's files go.
+
+`company-product-analysis.md` is company-level and shared across roles. If a second role at the same company is ever tracked, every role-specific file takes the role slug as a prefix — `<role-slug>-fit-assessment.md`, `<role-slug>-cover-letter.md`, `<role-slug>-cv.md` — and the company folder stays one folder.
 
 The index has **no Notes column and no Reason column**. Anything discursive lives in the role file.
 
@@ -69,7 +81,7 @@ All three tables share the same columns, so advancing a role is a cut-and-paste 
 
 - **As of** — date the current status was reached, `YYYY-MM-DD`.
 - **Next action** — a verb, with a date where known: `Follow up 2026-09-15`. Closed and `Passed` rows use `—`.
-- **File** — relative link to the role file.
+- **File** — relative link to the role file, `applications/<company-slug>/<role-slug>.md`.
 
 Sort every table by `As of`, newest first.
 
@@ -96,7 +108,7 @@ The Status line here and the index row must agree. On conflict the role file win
 
 Needs role title and company. Location, link, and the JD text are taken if offered, asked for only if the user seems to expect otherwise.
 
-1. Write `job-pipeline/<company>-<role-slug>.md`, pasting the JD verbatim if supplied. Never paraphrase a JD — other skills read it later.
+1. Write `job-pipeline/applications/<company-slug>/<role-slug>.md`, creating the company folder if it doesn't exist, pasting the JD verbatim if supplied. Never paraphrase a JD — other skills read it later.
 2. Add the index row, table chosen by status. Default `Shortlisted` unless the user says otherwise.
 3. Refresh the board — `overview.md` changed, so run Operation 3.
 4. Confirm in one line, naming the file, plus the board link.

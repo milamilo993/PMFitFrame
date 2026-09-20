@@ -25,7 +25,9 @@ if [ ${#cv[@]} -eq 0 ]; then
   echo "STATE: no CV on file."
   echo "ACTION: your first response this session must be exactly this line, nothing before or after it, then stop:"
   echo
-  echo "Hi, I am your job assistant please submit the CV at least to get started but ideally competencies and preferences and context as I work better with it"
+  echo "Hi there, I am PMFitFrame — I help you figure out which roles are worth your time, and win the ones that are :) "
+  echo "let's get you started, please submit your CV. You can drag and drop the file, give a path to it, or paste the text."
+  echo "I also work better if you give me your competencies and job and career preferences, let me know when you are ready to share that as well. "
 else
   echo "STATE: returning user."
   echo "ON FILE: ${cv[*]##*/}"
@@ -37,6 +39,6 @@ else
   else
     echo "MISSING: none"
   fi
-  echo "ACTION: open your first response with one line naming the file(s) on file, one line on anything MISSING and why it helps, then the 4-option menu from CLAUDE.md verbatim. Then answer the user's message if it contained a real request."
+  echo "ACTION: open your first response with one line naming the file(s) on file, one line on anything MISSING and why it helps, then the 6-option menu from CLAUDE.md verbatim. Then answer the user's message if it contained a real request."
 fi
 echo "REMINDER: no git, no directory scanning, no recap, no preamble."

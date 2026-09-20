@@ -19,17 +19,45 @@ If given a URL, fetch it. If the fetch returns only a title (common on JS-render
 ## 3. Read first
 
 - `pm-profile/cv.md` as the source of truth for experience, protected metrics, current employment status (check fresh each time, don't assume from a prior assessment)
-- `pm-profile/competencies.md` for self-rated pillar scores (Execution, People Management, Strategy, Insights/Data) to calibrate how much evidence backs a given claim
+- `pm-profile/level.md` for `<level-slug>`, the level deduced from the CV by `cv-intake`, plus the target level if one is set. Read it before judging seniority fit — never re-derive the level yourself, and never assume it from the posting's title
+- `pm-profile/competencies.md` for self-rated pillar scores to calibrate how much evidence backs a given claim, read against the `<level-slug>` in its header
 - `pm-profile/preferences.md` for stated preferences ("What I'm Looking For") in the next role, to check whether the posting actually meets them or not, and to surface any misalignment in the write-up 
 - The recent entries in the job-pipeline and the `job-pipeline/strategy.md` if exists, both for prior applications to this exact company (a previous rejection or no-response is a real data point, not noise) and for patterns already established across the search (a repeated language knockout, a repeated domain gap, a repeated "do not apply" reason) that this role might repeat
-- `job-pipeline/<company>/company-product-analysis.md`, if `company-research` has already been run for this company
+- `job-pipeline/applications/<company-slug>/company-product-analysis.md`, if `company-research` has already been run for this company
+
+## 3b. Offer to build `preferences.md` when it is missing
+
+Every assessment without `pm-profile/preferences.md` has a hole in it: compensation, location scope, role shape and deal-breakers all become "unassessable, flag don't guess", which is honest but useless — and the same hole reopens on the next role. So when the file does not exist, offer once, in one line, to build it: *"`preferences.md` isn't on file — want me to ask you eight questions and write it? It gates this role and every other one."*
+
+On a yes, ask with the `AskUserQuestion` tool in two batches of four (the tool takes at most four per call), with concrete options rather than open prompts:
+
+**Batch 1 — the role itself**
+1. Total-compensation floor, in the currency of the market being searched, as bands.
+2. Role shape: senior/staff IC, tech lead, engineering manager, product-facing.
+3. Domain direction — multi-select, so "would take either" is expressible.
+4. Company stage and size — multi-select.
+
+**Batch 2 — the constraints**
+5. Geography: which locations the job may be in, including remote-from-home-country — multi-select.
+6. Office time tolerated: hybrid days, remote preferred, remote only, full-time office.
+7. Urgency: actively looking, open but not urgent, mapping the market, must leave soon.
+8. Deal-breakers — multi-select, drawn from what the search has actually surfaced (a language ramp, on-call load, no AI/ML content, any pay cut).
+
+Then write `pm-profile/preferences.md` with the answers as stated, carrying `**Target level:** <level-slug>` in its Role section (from the role-shape answer, in the vocabulary `cv-intake` defines), plus a short **Screening rules** section that turns them into the tests a future assessment can apply mechanically, and a **Tensions** section naming any answers that conflict (a comp floor that rules out the stage they picked, "relocate anywhere" alongside "home country only"). Rule 6 of `CLAUDE.md` applies: show the draft and get a yes before writing — this is `pm-profile/`, not `job-pipeline/`, and only `cv-intake` is exempt.
+
+Two things to do straight after writing it:
+
+- **Re-check the assessment in progress against the new preferences** before publishing. A comp floor or a deal-breaker can turn a conditional apply into a do-not-apply, and that is the whole point of having asked.
+- **Re-check recent assessments already on the board.** If a stated deal-breaker now contradicts a verdict recorded earlier, say so and offer to revise that assessment rather than leaving the board asserting something the profile now contradicts.
+
+If the user declines, proceed without it and keep flagging the specific gaps it would have closed. Do not ask again in the same session.
 
 ## 4. Ask, don't guess, when a stated requirement turns on an unverifiable personal fact
 
 If a hard requirement (a language fluency level, a certification, a citizenship/clearance-dependent eligibility, a specific tool) isn't captured in `pm-profile/cv.md` and the verdict genuinely hinges on it, ask user directly rather than assume either way. A guessed "do not apply" can lose a real fit; a guessed "apply" can waste her time on something that was always going to knock out. This has come up for language levels specifically, don't infer fluency from silence in the profile.
 
 ## 5. Write the assessment
-Write to `job-pipeline/<location>/<company-slug>/fit-assessment.md` (create the folder if it doesn't exist, where `<location>` is the location of the job and `<company-slug>` is a URL-friendly version of the company name, if remote posting then use "remote"). Header block:
+Write to `job-pipeline/applications/<company-slug>/fit-assessment.md` (create the folder if it doesn't exist, where `<company-slug>` is a URL-friendly version of the company name, lowercase and hyphenated, with no location and no role in it). This is the project-wide convention defined in the `job-pipeline` skill: every file belonging to a company lives in that one folder. Header block:
 
 ```
 # Role Fit Assessment — <Title>, <Company>, <Location>
@@ -45,6 +73,14 @@ Then, in this order:
 
 2. **Fit Analysis** — lettered subsections (a, b, c...), pick the dimensions that actually matter for this posting rather than a fixed checklist. Common ones seen across this project: domain/industry fit, seniority/scope fit, execution fit, technical/architecture fit, AI/ML fit, leadership/stakeholder fit, financial/commercial fit, culture/environment fit, language/logistics requirements. Each gets a **Reasoning:** paragraph (grounded in specific, named evidence from the profile, not generic claims) and a one-line **Verdict:**.
 
+   **Seniority is judged against `<level-slug>`, not against the posting's title.** Work out the level the posting's *described scope* implies, then compare it to the current `<level-slug>` from `pm-profile/level.md`, and to the target level if one is set. Three outcomes, each handled differently:
+
+   - **Posting below `<level-slug>`** — an under-levelled role. Not a knockout by itself, but name it: it predicts a lower band, a narrower remit, and a retention probe in the interview. Say plainly that the title reads a step down and that the scope, not the title, is what would have to justify it.
+   - **Posting at `<level-slug>`** — a lateral move. Then the question is whether it advances the target level, and if it does not, say so; a lateral move that also narrows the domain is worth naming as a direction change rather than a step.
+   - **Posting above `<level-slug>`** — a stretch. Say which specific evidence is thin for that bar rather than declaring it out of reach, since a posting one level up with genuine scope overlap is often the highest-value application in a pipeline.
+
+   A title without a seniority marker ("AI Engineer", "Software Engineer") is not evidence of a low level, only of an unstated one: derive the level from the described scope and flag that it needs confirming in the first conversation.
+
 3. **Honest Gap Assessment** — a table: `Gap | Knockout risk | Bridging action`. Knockout risk is High/Medium/Low or, when confirmed, "Confirmed knockout." A stated hard requirement she doesn't meet is a different category from a "nice to have" she doesn't meet, don't conflate them. Distinguish a genuine gap (real, would need real work) from a perceived one (smaller than it feels, per the profile's own framing) explicitly.
 
 4. **Bridging Strategy** — only when the verdict leans toward applying. Concrete, quotable framing language for each real gap, in Mila's voice, something she could actually say in an interview, not a description of a strategy.
@@ -58,7 +94,7 @@ Then, in this order:
 Do these in order — the artifact URL from step 1 is needed for step 2:
 
 1. **Publish the assessment artifact** — invoke the `pipeline-artifacts` skill, Operation 1, with the path to the fit-assessment file just written. It publishes/updates the Artifact page and hands back its URL.
-2. **Record to Job Pipeline** — add the role to `job-pipeline/overview.md` if it doesn't exist, create one. Structure the entry (Applied — Active if already submitted, Assessed — Not Applied otherwise) with a one-line summary of the verdict and reasoning, and use the URL from step 1 as this row's **File**-column link.
+2. **Record to Job Pipeline** — add the role to `job-pipeline/overview.md` if it doesn't exist, create one. Structure the entry (Applied — Active if already submitted, Assessed — Not Applied otherwise) with a one-line summary of the verdict and reasoning, The **File** column holds the relative path to the role file, `applications/<company-slug>/<role-slug>.md` — `pipeline-artifacts` swaps in the artifact URL from step 1 when it renders the board, so don't put the URL in `overview.md` itself.
 3. **Publish the pipeline board** — invoke the `pipeline-artifacts` skill, Operation 2, now that `overview.md` has changed. It reads `overview.md` itself, republishes the board, and shares the link with the user directly — nothing further needed from this skill. Do not also print the pipeline, or any part of it, into the reply; the board is the only view of it.
 
 ## 7. What this skill never does
@@ -73,3 +109,13 @@ Do these in order — the artifact URL from step 1 is needed for step 2:
 - If domain is unfamiliar and the verdict is Apply or conditional, suggest running `company-research` next, deep company/product research strengthens both the cover letter and any later interview prep.
 - If the verdict is Apply, offer to run `cv-tailor` and `cover-letter` next, don't run them automatically, the verdict itself is often worth a pause for Mila to react to first.
 - If this assessment corrects something a related document already claims (a competitor list in `company-product-analysis.md`, a scope assumption in `roles/target-companies.md`), fix it there too rather than leaving two documents disagreeing.
+
+## Tell me when you apply
+
+This skill produces material the user might act on without saying so. The pipeline only stays true if the moment of applying gets recorded, and nothing here can observe it happening.
+
+So end the reply with one short line asking them to say when they have applied, so the entry moves to Applied — Active with the date and the board stays accurate. One line, in the reply, not a paragraph and not a document section. Vary the wording; do not repeat a canned sentence every time.
+
+Ask only when applying is actually the next step for this role (an Apply or conditional-apply verdict, a CV or letter drafted, research done ahead of a submission). Skip it on a do-not-apply verdict, on a role already recorded as applied, and when the user has already told you in this session that they applied.
+
+When they do report it, that is a `job-pipeline` status update: record the date, move the entry, republish the board, hand back the link. A reported application also often carries the deadline, the channel used (cold, referral, recruiter), and whether they sent the letter, all worth capturing in the role file while it is fresh.
