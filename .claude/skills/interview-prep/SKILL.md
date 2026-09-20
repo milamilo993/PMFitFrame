@@ -12,15 +12,22 @@ Prepares user for a specific upcoming conversation in her job search. Two distin
 
 Never dump the entire question bank regardless of mode or stage.
 
-## Reference library
+## Reference library — the book behind the questions
 
-`.claude/skills/interview-prep/docs/` holds the interview reference material for this project, as `.md` files extracted from the source PDFs. Both modes draw on it.
+This skill does not invent interview questions from memory. It runs off a **book**: one or more interview guides sitting in `.claude/skills/interview-prep/docs/` as `.md` files extracted from the source PDF, carrying `<!-- page N -->` markers. The book supplies the question bank and the grading rubric; the user's own files (`fit-assessment.md`, `cv.md`, `competencies.md`, `level.md`) supply the calibration. Both modes draw on it.
 
+**What ships.** The repo ships with *The Heap Book of Questions*, a free interview question guide, plus whatever else the user has added. That is the default bank. This project was originally built against *Cracking the PM Interview* (McDowell & Bavaro) and *Decode & Conquer* (Lewis Lin) — both paid books, neither redistributable, so no condensation of them is in this repo. Never cite them as though they were on disk.
+
+**Any book works.** The library is source-agnostic: whatever `.md` files are in `docs/` at that moment *are* the bank. A user who owns a paid guide drops its extracted markdown into `docs/` and it becomes the source with no change to this skill. Say this plainly when the library looks thin, when the user asks why a question feels generic, or when they ask what the questions are based on — they should know which book is answering them, and that they can swap it.
+
+Working rules:
+
+- **Check the folder before you rely on it** — `ls .claude/skills/interview-prep/docs` — and read any `.md` in it. This is the skill's own reference material, so rule 2 of `CLAUDE.md` does not apply to it. Don't read a whole book into context: grep for the topic, then read the pages around the hit.
 - **Use the `.md` files, never the `.pdf` alongside them.** The markdown is the extracted, cleaned text; re-parsing a PDF when the `.md` exists wastes the session and loses the page markers.
-- **Listing that folder is allowed** — `ls .claude/skills/interview-prep/docs` — and so is reading any `.md` in it. This is the skill's own reference material, so rule 2 of `CLAUDE.md` does not apply to it. Don't read the whole book into context: grep for the topic, then read the pages around the hit.
-- **Every file carries `<!-- page N -->` markers.** Cite them when a question or framework comes from one, e.g. "per `Data_driven_product_manager.md` p.62". That lets the user go to the printed page.
+- **A PDF with no `.md` sibling is not yet usable.** Tell the user the book is present but unextracted and offer to extract it before proceeding.
+- **If `docs/` holds no usable `.md` at all**, say so in one line — the question bank is empty and the questions will be generic — offer to extract a book the user supplies, and fall back to the rubric written into this skill. Don't silently pretend a bank exists.
+- **Cite the page** whenever a question or framework comes from the book, e.g. "per `the-heap-book-of-questions.md` p.62". That lets the user go to the printed page and check it.
 - **Some pages are marked `*(no extractable text — image-only page)*`.** That means a figure or cover, not missing content — don't report it as a gap and don't try to infer what the image said.
-- **The library is whatever is in the folder at the time.** Check it rather than assuming a particular book is present; if a source the user asks about isn't there, say so and offer to extract it from a PDF they supply.
 
 What to use it for, and what not to:
 
@@ -43,12 +50,13 @@ What to use it for, and what not to:
    - Any prior outreach notes in the same company folder (e.g. `outreach-to-*.md`) for context already established with this contact (what's already been said, what's already been asked/answered).
    - If no fit assessment exists yet for this company, say so and offer to build one first (see the role-fit assessment pattern used elsewhere in this project) — going into a conversation without one means prep is generic rather than grounded.
 
-3. **Calibrate depth to stage.** Use `docs/question-bank.md` if exists as the source pool, not a script:
-   - **Meet-and-greet / intro:** Category 1 (Common/Rapport) only, ~6-10 questions max. No case studies, no CIRCLES, no technical drilling. The goal is mutual fit exploration, not evaluation.
-   - **Recruiter screen:** Category 1 plus logistics/motivation framing.
-   - **Hiring manager:** Category 1 + Category 7 (Behavioral/STAR) + light Category 2 (one product-sense question, not several).
-   - **Panel / case round:** Full Category 2 (Product Sense) calibrated to sub-type (design/improvement/growth/strategy/launch — pick the one closest to the role's actual mandate), plus Category 3 (Technical) if the role is technical/platform-leaning, plus Category 4 (AI PM) if the role is AI-native or AI-adjacent.
-   - **Final/executive round:** Category 6 (Leadership & Communication) + Category 8, with emphasis on strategic narrative over tactical execution detail.
+3. **Calibrate depth to stage.** The question pool comes from the book(s) in `docs/` (grep for the topic, read around the hit), used as a pool and not as a script. Books group their material differently — map the stage onto that book's own chapters rather than assuming a fixed category numbering:
+   - **Meet-and-greet / intro:** rapport and motivation questions only, ~6-10 questions max. No case studies, no CIRCLES, no technical drilling. The goal is mutual fit exploration, not evaluation.
+   - **Recruiter screen:** rapport, plus logistics and motivation framing.
+   - **Hiring manager:** rapport + behavioral/STAR + one light product-sense question, not several.
+   - **Panel / case round:** full product sense, calibrated to sub-type (design/improvement/growth/strategy/launch — pick the one closest to the role's actual mandate), plus technical questions if the role is technical/platform-leaning, plus AI-PM material if the role is AI-native or AI-adjacent.
+   - **Final/executive round:** leadership and communication, with emphasis on strategic narrative over tactical execution detail.
+   - If the book on file has nothing on a stage's topic (many guides skip AI-PM entirely), say so in one line and tell the user a different book in `docs/` would cover it — don't quietly fill the hole from memory.
    - Rule of thumb for volume: roughly 1 substantive question per 2–3 minutes of expected discussion time, leaving room for the interviewer's own tangents.
 
 4. **Write the output.** Save to `job-pipeline/applications/<company-slug>/interview-prep-<stage-slug>.md` (e.g. `interview-prep-meet-and-greet.md`, `interview-prep-hiring-manager.md`). Structure:
@@ -75,9 +83,8 @@ An interactive loop, not a document. You are the interviewer; user answers in th
 Ask (if not already clear from context): which company/round is this for, and is there a specific set of expected questions already identified (e.g. a fit assessment's "What to Expect in the Process" section) to prioritize over the general bank. Ground every question in:
 - That company's `job-pipeline/applications/<company-slug>/fit-assessment.md` — especially "What to Expect in the Process" and the honest gap list. Real, already-identified likely questions beat generic bank questions — use them first.
 -  `pm-profile/cv.md` and `pm-profile/competencies.md` — this is where user's documented stories live (metrics, team scope, the governance-framework story, etc.). Treat these as the baseline, not the ceiling: user will often surface new stories or details live during practice that aren't written down anywhere yet. That's expected and good. When they introduces something new, ask user to confirm it's accurate as stated (numbers, scope, outcome) before building it into a rebuilt answer — the constraint is truthfulness to user's actual experience, not prior documentation. Never invent or embellish a detail yourself; if a number or outcome is missing, ask user for it rather than filling it in.
-- `references/cracking-the-pm-interview-behavioral.md` — the primary assessment rubric and question-category source for this mode (condensed from McDowell & Bavaro's *Cracking the PM Interview*, Ch. 11-12). Use its five-question story-quality checklist and category list (Leadership & Influence, Challenges, Mistakes & Failures, Successes, Teamwork) as the main structure for both picking questions and grading answers.
-- `references/decode-and-conquer.md` — a second assessment layer (condensed from Lewis Lin's *Decode & Conquer*, Ch. 12 & 16), used alongside the above, not instead of it. Adds: the credibility/likability grading dimensions (especially "owner vs. participant" and "good vs. great achievement" — was the result actually caused by her, or would it have happened anyway), and the DIGS storytelling structure (Dramatize the situation, Indicate alternatives, Go through what you did, Summarize impact) as a delivery-quality check layered on top of the SAR content check. Also holds the **New Market Entry Checklist** (market characteristics, competitive environment, company fit) — pull this out specifically when a case/strategy-shaped question comes up (e.g. Bislab's "how would you sequence entry into a new country market"), since that's a different question type from pure behavioral and shouldn't be forced through SAR/DIGS.
-- `references/question-bank.md` Categories 1, 6, 7, 8, and the Hired Guide pool (Category 10) as a secondary/supplementary pool once the book's categories and the company-specific questions are exhausted.
+- **The book(s) in `docs/`** — the question source and the primary rubric for this mode. Grep for the behavioral and storytelling chapters and work from those: the book's own question categories (leadership and influence, challenges, mistakes and failures, successes, teamwork, or whatever taxonomy it uses) drive question selection, and its story-quality checklist drives grading. Cite the page when a question or a grading criterion comes from it. See "Reference library" above for what is on file and what to tell the user about it — in particular, that the bank is whatever book sits in `docs/`, and that they can swap in their own.
+- **The bar below** — the assessment dimensions in step 2 are this skill's own floor. Apply them on top of whatever the book says, and rely on them alone (saying so) if the library is empty.
 
 ### 1. Ask one question at a time
 
@@ -85,21 +92,21 @@ Pick a single question, state it plainly as an interviewer would (no meta-commen
 
 ### 2. Assess user's answer against a <level-slug> bar
 
-They are calibrating for Senior/Principal level, not APM/mid-level — hold the bar there. For behavioral/situational questions, run the answer through both books together — the content check first, then the delivery check:
+They are calibrating for Senior/Principal level, not APM/mid-level — hold the bar there. For behavioral/situational questions, run the answer through the book's checklist first, then through the floor below — the content check first, then the delivery check:
 
 **Content (five-question checklist + SAR):** substantial / understandable / says something specific about her / really about her, not "we" / shows they "gets" other people — plus:
 - **S.A.R. structure and Nugget First:** does they open with a one-line thesis before diving in? Is Situation short, Action the bulk of the answer, Result quantified wherever a real number exists (pull from `pm-profile/cv.md` — never let her leave a result vague if a real number is already documented)?
-- **Ownership language / "owner vs. participant":** "I" for her specific decisions and judgment calls, "we" for team execution — the single most common senior-candidate failure mode, flagged independently by both books. Watch for it on every answer, not just when it's egregious.
+- **Ownership language / "owner vs. participant":** "I" for her specific decisions and judgment calls, "we" for team execution — the single most common senior-candidate failure mode, and one every interview guide flags. Watch for it on every answer, not just when it's egregious.
 - **Good vs. great achievement:** would this result have happened anyway, or was it specifically caused by her judgment call? If the story doesn't make that causal link clear, push on it — this is a sharper version of "quantify the result."
 - **Altitude:** does the answer operate at strategy/outcome level (business terms, cross-functional influence, judgment under ambiguity) or stay in tactical/execution detail? Named, real gap for her (coaching needs: "strategic narrative — practice articulating work in business terms to executives, not just product terms to engineers") — call it out specifically when the answer drifts tactical.
 - **Honesty about gaps:** if the question touches a known gap (e.g. credit-risk domain, data-access negotiation), does they name it plainly and briefly, or does they dodge or over-apologize? Both are misses.
 
-**Delivery (DIGS layer):** are the real stakes dramatized rather than flattened into generic activity ("emails and meetings")? Is there a genuine alternative/tradeoff named, so the choice reads as deliberate rather than the only obvious move? Does the story read as a story — named people, real conflict, a landed resolution — rather than a status update?
+**Delivery (DIGS layer — Dramatize the situation, Indicate alternatives, Go through what you did, Summarize impact):** are the real stakes dramatized rather than flattened into generic activity ("emails and meetings")? Is there a genuine alternative/tradeoff named, so the choice reads as deliberate rather than the only obvious move? Does the story read as a story — named people, real conflict, a landed resolution — rather than a status update?
 
 - **Conciseness:** senior answers are tight — if it would run past ~90 seconds to 2 minutes spoken, flag it as too long and identify what to cut.
 - **Anticipate the follow-up:** after grading the core answer, consider whether the standard follow-ups (How did the team react? What did you learn? What would you do differently? What was the baseline/counterfactual?) would expose a weak spot — flag it now rather than let her get caught by it live.
 
-**If the question is case/strategy-shaped rather than behavioral** (e.g. "how would you sequence entry into a new market"), skip the above entirely and structure/assess against the New Market Entry Checklist in `references/decode-and-conquer.md` instead — market characteristics, competitive environment, company fit, applied concretely rather than just recited.
+**If the question is case/strategy-shaped rather than behavioral** (e.g. "how would you sequence entry into a new market"), skip the above entirely and structure/assess against a market-entry or strategy framework from the book in `docs/` instead — typically market characteristics, competitive environment, company fit, applied concretely rather than just recited. If the library has no such framework, say so and use those three headings directly.
 
 ### 3. Give rationale, then a rebuilt answer
 
@@ -118,7 +125,7 @@ When the practice session ends, save the politheyd answers (not the full back-an
 
 ## Notes
 
-- Pull questions and frameworks from the reference library in `docs/` rather than generating them from memory, and cite the page. See "Reference library" above.
+- Pull questions and frameworks from the reference library in `docs/` rather than generating them from memory, and cite the page. See "Reference library" above. If the user has never been told what the bank is built on, tell them once: which book is on file, and that dropping another extracted book into `docs/` replaces it.
 - Keep the tone of the output the way user writes to herself in this project: direct, honest about gaps, no inflated confidence. The fit assessments already model this voice — match it.
 - Don't invent conversation stages or interviewers that weren't mentioned — ask rather than assume.
 - If user already has notes from a previous round with the same company (e.g. a reply from the contact, like Lars's description of the role scope), fold that context in explicitly rather than re-deriving it generically.

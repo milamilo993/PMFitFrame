@@ -77,9 +77,18 @@ Eight skills in `.claude/skills/`. Six are menu options; `cv-intake` fires whene
 | **role-fit** | `2`, a pasted posting, "should I apply" | `fit-assessment.md`: role deconstruction, preference screen, dimension-by-dimension fit, honest gaps, bridging language, verdict. The foundation document every other skill reads first. |
 | **company-research** | `3`, "research this company" | `company-product-analysis.md`: product, market, competitors, business model, org signals. Enough to answer "tell me about our product" in an interview. |
 | **tailor-resume** | `4`, "tailor my CV" | `cv.md` in the company folder. Reorders and reframes. Never invents. |
-| **interview-prep** | `6`, "mock interview" | Mode A: a calibrated prep doc per stage, published as its own page. Mode B: a live turn-by-turn mock where you answer and get graded against a senior bar. |
+| **interview-prep** | `6`, "mock interview" | Mode A: a calibrated prep doc per stage, published as its own page. Mode B: a live turn-by-turn mock where you answer and get graded against a senior bar. Both run off a book you supply — see below. |
 | **cover-letter** | `5`, "write the cover letter" | `cover-letter.md`, five-part structure, gaps named directly rather than buried. |
 | **pipeline-artifacts** | Another skill needing a refresh | The published pages: one per role document, plus the board that links them all. |
+
+### The interview question book
+
+`interview-prep` does not invent questions from memory. It reads a **book**: one or more interview guides in `.claude/skills/interview-prep/docs/`, extracted to markdown with `<!-- page N -->` markers, which supply both the question bank and the grading rubric. Everything it asks you should be traceable to a page you can go and read.
+
+- **What ships:** *The Heap Book of Questions*, a free interview question guide. That is the default bank, and it is what the skill cites unless you change it.
+- **What does not ship:** this project was originally built against *Cracking the PM Interview* (McDowell & Bavaro) and *Decode & Conquer* (Lewis Lin). Both are paid books, so no copy or condensation of them is in this repo. If you own them, extract them yourself and the skill picks them up.
+- **Any book works.** The library is whatever `.md` files are in `docs/` at the time. Drop another extracted guide in — PM, engineering, design, sales, whatever your field is — and it becomes the source with no change to the skill. A PDF alone is not enough: ask for it to be extracted first, or the skill will tell you it is there but unusable.
+- **Empty `docs/` still runs**, on the rubric written into the skill, and it says so rather than pretending a bank exists. The questions are noticeably more generic.
 
 ### What the skills refuse to do
 
@@ -208,7 +217,7 @@ Reads and writes to `pm-profile/` and `job-pipeline/` are pre-allowed, so the wo
 
 **Add a skill.** Create `.claude/skills/<name>/SKILL.md` with frontmatter (`name`, `description` with trigger phrases), then add a row to the table in `CLAUDE.md` so it gets invoked rather than improvised.
 
-**Give a skill reference material.** `interview-prep/docs/` holds books extracted to markdown with `<!-- page N -->` markers so the skill can cite a page. Drop a PDF in and ask for it to be extracted.
+**Swap the interview book.** `interview-prep/docs/` is the question bank and the grading rubric for both interview modes — see [The interview question book](#the-interview-question-book). Drop a PDF in, ask for it to be extracted to markdown, and every future prep doc and mock interview draws on it and cites its pages. Removing the shipped book and adding your own is a supported swap, not a hack.
 
 **Change what gets screened.** Edit `pm-profile/preferences.md`. The **Screening rules** section is applied mechanically in every assessment, so changing a rule there changes every future verdict. Tell the assistant afterwards, since a changed deal-breaker can invalidate a verdict already on the board.
 
@@ -222,7 +231,7 @@ Reads and writes to `pm-profile/` and `job-pipeline/` are pre-allowed, so the wo
 
 - **The artifacts are the interface.** Pipeline state is deliberately unavailable in the terminal. If that sounds annoying, it is the point: a retyped table in scrollback goes stale the moment anything changes.
 - **A cover letter is a cold-channel tool.** Where a warm introduction exists, the letter is the weaker path and the skill says so rather than overselling itself.
-- **Prep docs cite the book, not memory.** Interview questions and frameworks come from the extracted references in `interview-prep/docs/` with page numbers, so you can check them.
+- **Prep docs cite the book, not memory.** Interview questions and frameworks come from the extracted books in `interview-prep/docs/` with page numbers, so you can check them. The shipped book is free (*The Heap Book of Questions*); the paid guides this project was originally built on are not included, and the quality of the prep tracks the quality of the book you put in.
 - **A narrow profile produces a thin pipeline.** If your preferences encode a hard comp floor and a domain requirement, most roles will be screened out, and the board will look empty. That is the filter working, not the assistant idling.
 
 ---
