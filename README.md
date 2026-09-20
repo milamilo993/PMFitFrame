@@ -32,12 +32,13 @@ This project is built to fail differently:
    cd PMFitFrame
    claude
    ```
-3. **Give it your CV.** A path, an attachment, or pasted text. PDF, DOCX, DOC, Pages, RTF, TXT or MD all work.
+3. **Start the conversation.** Say anything — `hi`, a question, or jump straight to sharing a CV. This triggers the boot protocol, which shows you the welcome line if no CV is on file, or the menu if one exists.
+4. **Give it your CV.** A path, an attachment, or pasted text. PDF, DOCX, DOC, Pages, RTF, TXT or MD all work.
    ```
    > C:\path\to\my_resume.pdf
    ```
    It extracts the text, saves `pm-profile/cv.md` plus the original, and tells you where both landed.
-4. **Paste a job description.** You get a fit assessment, a published page, and a pipeline entry.
+5. **Paste a job description.** You get a fit assessment, a published page, and a pipeline entry.
 
 That is the whole onboarding. Everything else is optional depth.
 
