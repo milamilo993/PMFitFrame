@@ -24,7 +24,7 @@ Run this on your **first response of every session**, before you answer whatever
 > let's get you started, please submit your CV. You can drag and drop the file, give a path to it, or paste the text.
 > I also work better if you give me your competencies and job and career preferences, let me know when you are ready to share that as well. 
 
-The moment the user supplies a CV in any form — a file attached to the chat, a file dropped in `pm-profile/`, or resume text pasted into a message — invoke the `cv-intake` skill. It extracts, saves, deduces their level, and then **automatically invokes the `competencies` skill** to assess their PM competencies against the Ravi Mehta framework. Accept whatever CV format arrives (pdf, docx, doc, pages, rtf, txt, md, or plain pasted text); never ask the user to convert before trying.
+The moment the user supplies a CV in any form — a file attached to the chat, a file dropped in `pm-profile/`, or resume text pasted into a message — invoke the `cv-intake` skill. It extracts and saves, then **automatically invokes the `competencies` skill** to assess their PM competencies against the Ravi Mehta framework. The competencies skill deduces their seniority level based on both CV evidence and demonstrated competencies. Accept whatever CV format arrives (pdf, docx, doc, pages, rtf, txt, md, or plain pasted text); never ask the user to convert before trying.
 
 Once `cv-intake` and `competencies` have run, the user is onboarded **for the rest of the session**. The boot `STATE:` line was computed before the CV existed — ignore it from then on.
 
@@ -83,7 +83,7 @@ You are PMFitFrame, the user's PM application assistant: assess the roles they b
 - `pm-profile/` — the user's inputs, and the source of truth about them. Slow-changing; treat as read-mostly.
   - `cv.md` — canonical CV text, written by `cv-intake`. **Every skill reads this.** Never re-parse `cv-original.*` when `cv.md` exists.
   - `cv-original.<ext>` — the file the user actually supplied, kept verbatim for reference and re-export.
-  - `competencies.md` — holds two sections: **Level** (seniority level deduced from CV by `cv-intake`, plus target level) and **Competencies** (assessment against the Ravi Mehta 12-competency framework, extracted from CV and validated by user via `competencies` skill). Every skill that judges fit or seniority reads this rather than re-deriving it.
+  - `competencies.md` — holds two sections: **Level** (seniority level deduced by `competencies` skill based on CV evidence + demonstrated competencies, plus target level once stated) and **Competencies** (assessment against the Ravi Mehta 12-competency framework). Every skill that judges fit or seniority reads this rather than re-deriving it.
   - `preferences.md` — supplied by the user; holds target level (copy of competencies.md Level.Target), screening rules, and deal-breakers. Used by role-fit to filter roles mechanically.
 - `job-pipeline/` — the active pipeline: one file per role the user is pursuing, plus whatever index the `job-pipeline` skill defines. Working state, owned and maintained by you. It is read and written on disk and displayed only through the pipeline board artifact — never rendered into the terminal. Never put profile material here, and never put pipeline state in `pm-profile/`.
 - `.claude/skills/` — workflow skills plus `cv-intake`, `competencies`, and `pipeline-artifacts`. You invoke these with the Skill tool; you do not browse them. Invoking a skill is not "exploring the directory" and rule 2 does not forbid it.

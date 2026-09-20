@@ -89,20 +89,53 @@ For each area they flag:
 - If they want to add nuance, capture their calibration note (e.g., "Fluency with Data: On Track, but mostly in growth metrics — less experienced with product analytics")
 - If they point out a gap the CV didn't reveal, update that competency's rationale
 
-### 5. Save assessment
+### 5. Deduce level based on CV + competencies profile
+
+Now that you have both CV evidence and demonstrated competencies, deduce their seniority level. Use this vocabulary:
+
+| Slug | Reads as |
+| --- | --- |
+| `junior-ic` | 0–2 years, executing defined tasks |
+| `mid-ic` | 2–5 years, owns features or a product area end to end |
+| `senior-ic` | Owns a domain, makes trade-offs unsupervised, mentors informally |
+| `staff-ic` | Influence across teams, sets patterns others follow, no headcount |
+| `principal-ic` | Sets direction at org level |
+| `lead-ic` | Hands-on, owns a team's direction and delivery, no formal headcount |
+| `people-manager` | Headcount, hiring, performance; manages individual contributors |
+| `senior-manager` | Manages managers or several teams |
+| `director-plus` | Org-level leadership, budget, strategy |
+
+**Weigh these in order**, letting strongest evidence win:
+
+1. **Competencies profile.** Their demonstrated spikes and gaps signal their level. A user outperforming in Strategy but Needs Focus in Execution reads junior-ic or mid-ic. Outperforming in Strategy + Influencing People reads senior-ic or above.
+2. **CV scope.** Domain ownership, team size, org impact.
+3. **Headcount.** Formal reports move toward manager track; hands-on work alongside reports keeps them IC.
+4. **Years.** Sanity check only. Fifteen years in mid-ic is a signal you've misread something.
+
+**Report the deduction.** One line: "Based on your competencies profile and CV scope, I'm reading you as **[slug]**. This reflects [brief rationale]. If this doesn't match, let me know."
+
+### 6. Save full assessment
 
 Write to `pm-profile/competencies.md` with this structure:
 
 ```markdown
 # Competencies
 
-**Level:** [from level.md]  
-**Target Level:** [from level.md]  
+## Level
+
+- **Current:** [deduced from CV + competencies assessment]
+- **Target:** unknown — set in this section when the user states what they want next
+
+### Evidence
+- [title and scope signals from CV]
+- [key competencies that informed the level deduction]
+
+### Notes
+Deduced by `competencies` skill on [date] based on CV evidence and demonstrated competencies assessment. Override by editing this section; every skill reads it rather than re-deriving, so a correction propagates everywhere.
+
+## Competencies Assessment
+
 **Assessment Date:** [today]
-
-## Assessment
-
-[Radar chart or table showing all 12 competencies with level and rationale]
 
 ### Product Execution
 - **Feature Specification:** [Level] — [Rationale]. [Calibration note if any]

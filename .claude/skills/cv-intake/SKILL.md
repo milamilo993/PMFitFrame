@@ -52,76 +52,16 @@ Write:
 
 - `pm-profile/cv.md` — the extracted text, lightly cleaned: real headings, roles in reverse-chronological order, bullets preserved. Do not rewrite, summarise, improve, or reorder the user's wording. This is a transcription, not an edit.
 - `pm-profile/cv-original.<ext>` — a verbatim copy of the file the user supplied. Skip when the CV arrived as pasted text.
-- `pm-profile/competencies.md` — the **Level** section only, per Step 4b. The pillars below it wait for Step 6.
 
-Then tell the user, in one line each, where it landed — the file paths — followed by a short extraction summary: name, current title, number of roles detected, date range, word count, and the deduced `<level-slug>` from Step 4b. This is a report, not a request: never wait for a yes before saving.
+Then tell the user, in one line each, where it landed — the file paths — followed by a short extraction summary: name, current title, number of roles detected, date range, and word count. This is a report, not a request: never wait for a yes before saving.
+
+**Note:** Level deduction happens after competencies assessment (Step 5), not here. The competencies skill will assess the user against the Ravi Mehta framework and deduce level based on both CV evidence and demonstrated competencies.
 
 Replacing a CV already on file is the exception: `cv.md` existing means other skills have been built on it, so confirm before overwriting.
 
-## Step 4b — deduce the level and record it as `<level-slug>`
+## Step 4b — no level deduction here
 
-The CV is the only place seniority can be read from evidence rather than aspiration, so derive it here, once, and let every other skill reuse it. This is the project's `<level-slug>`. It lives in the **Level** section at the top of `pm-profile/competencies.md`, which is why that file is created here at intake rather than waiting for Step 6.
-
-**The vocabulary.** Exactly one of these. Do not invent a variant; if none fits, pick the closest and say why in the evidence line.
-
-The ladder is **function-neutral** — it describes scope and headcount, not a discipline. It applies unchanged to a product manager, a designer, a data scientist or an engineer. Where a row says "direction", read it in the user's own function: technical direction for an engineer, product direction for a PM.
-
-| Slug | Reads as |
-| --- | --- |
-| `junior-ic` | 0–2 years, executing defined tasks |
-| `mid-ic` | 2–5 years, owns features or a product area end to end |
-| `senior-ic` | Owns a domain, makes trade-offs unsupervised, mentors informally |
-| `staff-ic` | Influence across teams, sets patterns others follow, no headcount |
-| `principal-ic` | Sets direction at org level |
-| `lead-ic` | Hands-on, owns a team's direction and delivery, no formal headcount (an engineering tech lead, a lead PM) |
-| `people-manager` | Headcount, hiring, performance; manages individual contributors and is mostly out of the hands-on work |
-| `senior-manager` | Manages managers or several teams |
-| `director-plus` | Org-level leadership, budget, strategy |
-
-Two of these were named for the engineering track and were renamed to stop them mislabelling non-engineering CVs: `tech-lead` is now `lead-ic`, and `eng-manager` is now `people-manager`. A profile written before that change may still carry an old slug — treat `tech-lead` as `lead-ic` and `eng-manager` as `people-manager`, and correct it when you next touch the file. A profile written before the level moved may also still have a separate `pm-profile/level.md`; fold it into `competencies.md` and delete it.
-
-**How to deduce it.** Weigh these in order, and let the strongest evidence win rather than averaging:
-
-1. **The current title, taken literally.** A "Senior Software Engineer" or "Senior Product Manager" is `senior-ic` until something outweighs it. Title inflation and deflation both exist, so it is evidence, not proof.
-2. **Scope described in the bullets.** Cross-team or platform-wide ownership, patterns others adopt, being the named DRI for an org's standards — those are `staff-ic` signals even under a senior title. Owning one service, or one product area, is not.
-3. **Headcount.** Direct reports, hiring, performance management move it to the manager track — `people-manager` when the reports are individual contributors, `senior-manager` only when they are themselves managers or span several teams. A team supervised on a project does not count, and neither does mentoring.
-4. **Years, as a sanity check only.** Fifteen years in a `mid-ic` slug is a signal you have misread the scope, not evidence for the slug.
-
-**What to write.** Create `pm-profile/competencies.md` with the **Level** section filled in and the pillars left for Step 6:
-
-```markdown
-# Competencies
-
-## Level
-
-- **Current:** <level-slug>
-- **Target:** unknown — set in this section when the user states what they want next
-
-### Evidence
-- <the title and dates it comes from>
-- <the scope signal that confirmed or overrode the title>
-
-### Notes
-Deduced by `cv-intake` from `cv.md` on <date>. Override by editing this section; every skill
-reads it rather than re-deriving, so a correction here propagates everywhere.
-
-## Pillars
-
-*Not yet self-rated — see Step 6.*
-```
-
-Writing this much without asking is deliberate and is covered by the Step 4 carve-out: the Level section is a mechanical deduction from the CV, with the same provenance as `cv.md` itself, and every other skill needs a level to read from the moment intake finishes. The self-rated half of the file is different — the pillar ratings in Step 6 are the user's own claims, and those still need a yes.
-
-**Current versus target matters.** `cv-intake` can only establish *current* level, because the CV is history. Target level comes from what the user says they want. Keep them distinct even though they now sit in the same section: a `senior-ic` aiming at `staff-ic` is a different search from a `senior-ic` who wants to stay put, and conflating them produces bad verdicts in both directions.
-
-**Say it out loud.** Add the slug to the extraction summary in Step 4 as one extra line, and say it is a deduction the user can correct. Getting this wrong quietly miscalibrates every later assessment, so it is worth the one line.
-
-**Who consumes it.** Do not explain the mechanism to the user, just record it. For your own reference:
-
-- `competencies.md` holds it in the **Level** section, so pillar self-ratings are read against the right bar. This is the one source; nothing else stores a level of its own.
-- `preferences.md` restates the target as `**Target level:** <level-slug>` in its Role section, because that is where the user states what they want next. It is a copy of the Level section's Target line, not a second opinion — update both in the same pass.
-- `role-fit` compares the posting's implied level against `<level-slug>` and flags a mismatch in either direction.
-- `interview-prep` holds the grading bar at `<level-slug>` rather than at a hardcoded seniority.
+Level deduction moves to the competencies skill (Step 5), where it can be based on both CV evidence AND demonstrated competencies. This produces a more nuanced level assessment than CV titles alone. See the competencies skill documentation for the level vocabulary and deduction process.
 
 ## Step 5 — invoke competencies skill and resume flow
 

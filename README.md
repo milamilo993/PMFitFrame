@@ -37,8 +37,8 @@ This project is built to fail differently:
    ```
    > C:\path\to\my_resume.pdf
    ```
-   It extracts the text, saves `pm-profile/cv.md` plus the original, deduces your `level.md`, and then runs the competencies assessment.
-5. **Review your competencies.** The system analyzes your CV against the Ravi Mehta framework (12 competencies across 4 areas), presents its findings, and asks you to validate or adjust. This builds `pm-profile/competencies.md`.
+   It extracts the text and saves `pm-profile/cv.md` plus the original.
+5. **Review your competencies.** The system analyzes your CV against the Ravi Mehta framework (12 competencies across 4 areas), presents its findings, and asks you to validate or adjust. Based on your CV + demonstrated competencies, it deduces your seniority level. This builds `pm-profile/competencies.md` (with both your level and competencies assessment).
 6. **Paste a job description.** You get a fit assessment grounded in your level + competencies, a published page, and a pipeline entry.
 
 That is the whole onboarding. Everything else is optional depth.
@@ -57,8 +57,7 @@ A `SessionStart` hook (`.claude/boot.sh`) checks `pm-profile/` in shell **before
 
 **What gets built during onboarding:**
 - `cv.md` — canonical CV text (created by `cv-intake`)
-- `level.md` — your seniority level, deduced from the CV by `cv-intake`
-- `competencies.md` — your 12-competency assessment against the Ravi Mehta framework (created by `competencies` skill after `cv-intake`)
+- `competencies.md` — your seniority level (deduced by `competencies` skill based on CV + demonstrated competencies) and your 12-competency assessment against the Ravi Mehta framework (created by `competencies` skill after `cv-intake`)
 - `preferences.md` — your comp floor, role preferences, deal-breakers (filled in with you, optional)
 
 ```
