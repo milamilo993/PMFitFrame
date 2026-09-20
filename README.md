@@ -53,12 +53,13 @@ That is the whole onboarding. Everything else is optional depth.
 A `SessionStart` hook (`.claude/boot.sh`) checks `pm-profile/` in shell **before** Claude answers anything, and injects the result into context. The branch is decided by code, not by model judgement, so the first response is deterministic:
 
 - **No CV on file** → you get one line asking for a CV, and nothing else. No menu, no skills, no advice on a profile that does not exist.
-- **CV on file** → you get what is on file by filename, one line on anything missing (competencies assessment, preferences, etc.), then the menu.
+- **CV on file** → you get what is on file by filename, one line on anything missing (competencies assessment, preferences, etc.), then a picker to choose what to do. Open with a real request instead — a pasted posting, "research Acme" — and you get the work, not the picker.
 
 **What gets built during onboarding:**
 - `cv.md` — canonical CV text (created by `cv-intake`)
 - `competencies.md` — your seniority level (deduced by `competencies` skill based on CV + demonstrated competencies) and your 12-competency assessment against the Ravi Mehta framework (created by `competencies` skill after `cv-intake`)
 - `preferences.md` — your comp floor, role preferences, deal-breakers (filled in with you, optional)
+
 
 ```
 1. Check active job pipeline (publishes the board)
@@ -69,7 +70,9 @@ A `SessionStart` hook (`.claude/boot.sh`) checks `pm-profile/` in shell **before
 6. Prep for an upcoming interview
 ```
 
-A bare number is a selection. So is "where do things stand", "should I apply to this", or a pasted posting.
+A bare number still works if you type one, and so does "where do things stand", "should I apply to this", or a pasted posting.
+
+The picker carries four grouped choices — pipeline, assess a role, build application materials, interview prep — with the materials group drilling down to research / tailor / cover letter / all three, because the tool caps a question at four options. `menu` (or "what now", "not sure") brings it back mid-session. It never appears in front of a request you have already made clearly.
 
 ---
 

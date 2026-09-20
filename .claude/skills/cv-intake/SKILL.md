@@ -84,11 +84,13 @@ Offer once, in one line:
 
 > *Want me to build `preferences.md` now? Eight questions, two batches of four — about five minutes, and they gate every assessment from here on.*
 
-If the user declines, proceed and do not ask again this session. `role-fit` will offer it again when it actually bites. If the user would rather write it by hand, say where it goes and the shape below so it stays machine-readable.
+If the user declines, proceed and do not ask again this session. `role-fit`, `tailor-resume`, `cover-letter` and `interview-prep` each offer it again when it actually bites. If the user would rather write it by hand, say where it goes and the shape below so it stays machine-readable.
 
 ### `preferences.md`
 
-Do not invent a parallel question set. The canonical one lives in `role-fit`, section **3b** of `.claude/skills/role-fit/SKILL.md` — read it and use it: eight questions, two `AskUserQuestion` batches of four, concrete options rather than open prompts, and the same output structure (`**Target level:** <level-slug>` in the Role section, a **Screening rules** section that turns the answers into mechanical tests, a **Tensions** section naming answers that conflict). One question set, one file format, wherever the offer is made.
+Do not invent a parallel question set, and do not run one here. On a yes, **invoke the `preferences` skill** — it owns the canonical flow: eight questions in two batches of four, concrete options rather than open prompts, and the output structure (`**Target level:** <level-slug>` in the Role section, a **Screening rules** section that turns the answers into mechanical tests, a **Tensions** section naming answers that conflict). One question set, one file format, wherever the offer is made.
+
+The offer itself is one line of plain text, never an `AskUserQuestion` picker — a missing profile file is one thing to say yes or no to, not a menu of options.
 
 The target level is the point of contact with `competencies.md`. The Level section in `competencies.md` holds `**Target:** unknown` until this conversation happens; once the role-shape answer lands, update that Target line in the same pass as writing `preferences.md`, so the two never disagree.
 

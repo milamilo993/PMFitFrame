@@ -25,32 +25,17 @@ If given a URL, fetch it. If the fetch returns only a title (common on JS-render
 - The recent entries in the job-pipeline and the `job-pipeline/strategy.md` if exists, both for prior applications to this exact company (a previous rejection or no-response is a real data point, not noise) and for patterns already established across the search (a repeated language knockout, a repeated domain gap, a repeated "do not apply" reason) that this role might repeat
 - `job-pipeline/applications/<company-slug>/company-product-analysis.md`, if `company-research` has already been run for this company
 
-## 3b. Offer to build `preferences.md` when it is missing
+## 3b. Profile preconditions — stop here if either file is missing
 
-Every assessment without `pm-profile/preferences.md` has a hole in it: compensation, location scope, role shape and deal-breakers all become "unassessable, flag don't guess", which is honest but useless — and the same hole reopens on the next role. So when the file does not exist, offer once, in one line, to build it: *"`preferences.md` isn't on file — want me to ask you eight questions and write it? It gates this role and every other one."*
+This skill judges a posting against the user's own profile, so both halves of that profile have to exist before the assessment is worth writing. Check `pm-profile/` and handle what is missing **before** writing anything:
 
-On a yes, ask with the `AskUserQuestion` tool in two batches of four (the tool takes at most four per call), with concrete options rather than open prompts:
+- **`competencies.md` missing** → invoke the `competencies` skill. It reads `cv.md`, assesses the 12 Ravi Mehta competencies and writes the file, including the **Level** section this skill reads for `<level-slug>`. Without it, seniority gets judged with nothing to judge against, and every pillar claim is uncalibrated.
+- **`preferences.md` missing** → invoke the `preferences` skill. It asks eight questions and writes the file, including the target level, the screening rules `R1`…`Rn` this assessment applies, and the tensions between them. Without it, compensation, location scope, role shape and deal-breakers all collapse into "unassessable, flag don't guess" — honest, useless, and it reopens on the next role.
+- **Both missing** → say so in one line and run `competencies` first; `preferences` restates the level slug it establishes.
 
-**Batch 1 — the role itself**
-1. Total-compensation floor, in the currency of the market being searched, as bands.
-2. Role shape: senior/staff IC, tech lead, engineering manager, product-facing.
-3. Domain direction — multi-select, so "would take either" is expressible.
-4. Company stage and size — multi-select.
+Offer once, in **one line of plain text — never an `AskUserQuestion` picker** — naming what the missing file gates here: *"`preferences.md` isn't on file — want me to ask you eight questions first? It gates the comp, location and deal-breaker calls on this role and every other one."* A missing profile file is not a menu of options; it is one thing to say yes or no to. On a yes, invoke the skill, which owns whatever questions follow, then come back and finish the assessment against the file it wrote. On a no, carry on without it and keep flagging the specific gaps it would have closed; do not ask again in the same session.
 
-**Batch 2 — the constraints**
-5. Geography: which locations the job may be in, including remote-from-home-country — multi-select.
-6. Office time tolerated: hybrid days, remote preferred, remote only, full-time office.
-7. Urgency: actively looking, open but not urgent, mapping the market, must leave soon.
-8. Deal-breakers — multi-select, drawn from what the search has actually surfaced (a language ramp, on-call load, no AI/ML content, any pay cut).
-
-Then write `pm-profile/preferences.md` with the answers as stated, carrying `**Target level:** <level-slug>` in its Role section (from the role-shape answer, in the vocabulary `cv-intake` defines), plus a short **Screening rules** section that turns them into the tests a future assessment can apply mechanically, and a **Tensions** section naming any answers that conflict (a comp floor that rules out the stage they picked, "relocate anywhere" alongside "home country only"). Rule 6 of `CLAUDE.md` applies: show the draft and get a yes before writing — this is `pm-profile/`, not `job-pipeline/`, and only `cv-intake` is exempt.
-
-Two things to do straight after writing it:
-
-- **Re-check the assessment in progress against the new preferences** before publishing. A comp floor or a deal-breaker can turn a conditional apply into a do-not-apply, and that is the whole point of having asked.
-- **Re-check recent assessments already on the board.** If a stated deal-breaker now contradicts a verdict recorded earlier, say so and offer to revise that assessment rather than leaving the board asserting something the profile now contradicts.
-
-If the user declines, proceed without it and keep flagging the specific gaps it would have closed. Do not ask again in the same session.
+When a file does get written mid-assessment, re-run the screening against it before publishing — a comp floor or a deal-breaker can turn a conditional apply into a do-not-apply, which is the whole point of having asked.
 
 ## 4. Ask, don't guess, when a stated requirement turns on an unverifiable personal fact
 

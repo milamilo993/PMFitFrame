@@ -39,6 +39,7 @@ else
   else
     echo "MISSING: none"
   fi
-  echo "ACTION: open your first response with one line naming the file(s) on file, one line on anything MISSING and why it helps, then the 6-option menu from CLAUDE.md verbatim. Then answer the user's message if it contained a real request."
+  echo "ACTION: open your first response with one line naming the file(s) on file, one line on anything MISSING and why it helps."
+  echo "THEN: if the user's message contained a real request, just do it — no menu, no picker. Otherwise present the AskUserQuestion picker (CLAUDE.md -> The picker) instead of printing the 6-option list."
 fi
 echo "REMINDER: no git, no directory scanning, no recap, no preamble."
