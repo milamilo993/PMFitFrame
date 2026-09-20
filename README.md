@@ -37,8 +37,9 @@ This project is built to fail differently:
    ```
    > C:\path\to\my_resume.pdf
    ```
-   It extracts the text, saves `pm-profile/cv.md` plus the original, and tells you where both landed.
-5. **Paste a job description.** You get a fit assessment, a published page, and a pipeline entry.
+   It extracts the text, saves `pm-profile/cv.md` plus the original, deduces your `level.md`, and then runs the competencies assessment.
+5. **Review your competencies.** The system analyzes your CV against the Ravi Mehta framework (12 competencies across 4 areas), presents its findings, and asks you to validate or adjust. This builds `pm-profile/competencies.md`.
+6. **Paste a job description.** You get a fit assessment grounded in your level + competencies, a published page, and a pipeline entry.
 
 That is the whole onboarding. Everything else is optional depth.
 
@@ -52,7 +53,13 @@ That is the whole onboarding. Everything else is optional depth.
 A `SessionStart` hook (`.claude/boot.sh`) checks `pm-profile/` in shell **before** Claude answers anything, and injects the result into context. The branch is decided by code, not by model judgement, so the first response is deterministic:
 
 - **No CV on file** → you get one line asking for a CV, and nothing else. No menu, no skills, no advice on a profile that does not exist.
-- **CV on file** → you get what is on file by filename, one line on anything missing and why it would help, then the menu.
+- **CV on file** → you get what is on file by filename, one line on anything missing (competencies assessment, preferences, etc.), then the menu.
+
+**What gets built during onboarding:**
+- `cv.md` — canonical CV text (created by `cv-intake`)
+- `level.md` — your seniority level, deduced from the CV by `cv-intake`
+- `competencies.md` — your 12-competency assessment against the Ravi Mehta framework (created by `competencies` skill after `cv-intake`)
+- `preferences.md` — your comp floor, role preferences, deal-breakers (filled in with you, optional)
 
 ```
 1. Check active job pipeline (publishes the board)
@@ -73,9 +80,10 @@ Eight skills in `.claude/skills/`. Six are menu options; `cv-intake` fires whene
 
 | Skill | Triggered by | What it produces |
 | --- | --- | --- |
-| **cv-intake** | Supplying a CV in any form | `pm-profile/cv.md` (canonical text), `cv-original.<ext>` (verbatim), and the **Level** section of `competencies.md` (your `<level-slug>`, deduced from titles and described scope). Sanity-checks the extraction before saving, so a silently mangled PDF cannot poison everything downstream. Then offers to build the rest of `competencies.md` and `preferences.md` with you. |
+| **cv-intake** | Supplying a CV in any form | `pm-profile/cv.md` (canonical text), `cv-original.<ext>` (verbatim), and `level.md` (your `<level-slug>`, deduced from titles and described scope). Sanity-checks extraction before saving. Then invokes **competencies** skill automatically. |
+| **competencies** | After `cv-intake` during onboarding, or anytime you want to update | `pm-profile/competencies.md`: your assessment against the Ravi Mehta 12-competency framework (Product Execution, Customer Insight, Product Strategy, Influencing People). Extracts evidence from your CV, presents findings with rationale, asks you to validate or adjust. Captures calibration notes. Invokable anytime you gain new skills/scope. |
 | **job-pipeline** | `1`, "where do things stand", or news on a role | The index and role files under `job-pipeline/`. Owns one status vocabulary, and derives the table from the status so a rejected role cannot sit in Active. |
-| **role-fit** | `2`, a pasted posting, "should I apply" | `fit-assessment.md`: role deconstruction, preference screen, dimension-by-dimension fit, honest gaps, bridging language, verdict. The foundation document every other skill reads first. |
+| **role-fit** | `2`, a pasted posting, "should I apply" | `fit-assessment.md`: role deconstruction, preference screen, dimension-by-dimension fit (grounded in your level + competencies), honest gaps, bridging language, verdict. The foundation document every other skill reads first. |
 | **company-research** | `3`, "research this company" | `company-product-analysis.md`: product, market, competitors, business model, org signals. Enough to answer "tell me about our product" in an interview. |
 | **tailor-resume** | `4`, "tailor my CV" | `cv.md` in the company folder. Reorders and reframes. Never invents. |
 | **interview-prep** | `6`, "mock interview" | Mode A: a calibrated prep doc per stage, published as its own page. Mode B: a live turn-by-turn mock where you answer and get graded against a senior bar. Both run off a book you supply — see below. |

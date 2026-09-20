@@ -1,10 +1,10 @@
 ---
 name: cv-intake
-description: Take in the user's CV in any form - a PDF, DOCX, DOC, Pages, RTF, TXT or MD file attached to the chat or dropped in the folder, or resume text pasted straight into the message - extract the text, save it to pm-profile/, and resume the onboarding flow. Use whenever the user supplies a CV or resume for the first time, replaces the one on file, or pastes something that reads like a resume.
+description: Take in the user's CV in any form - a PDF, DOCX, DOC, Pages, RTF, TXT or MD file attached to the chat or dropped in the folder, or resume text pasted straight into the message - extract the text, deduce level, save to pm-profile/, and invoke competencies skill for Ravi Mehta assessment. Use whenever the user supplies a CV or resume for the first time, replaces the one on file, or pastes something that reads like a resume.
 ---
 # CV intake
 
-Turn whatever the user hands you into one canonical text file at `pm-profile/cv.md`, keep the original alongside it, then pick the flow back up. Every other skill reads `cv.md` — nothing else should ever have to parse a PDF again.
+Turn whatever the user hands you into one canonical text file at `pm-profile/cv.md`, deduce their seniority level, keep the original alongside it, and then invoke the `competencies` skill to assess them against the Ravi Mehta framework. Every other skill reads `cv.md` and `competencies.md` — nothing else should ever have to parse a PDF or manually assess competencies again.
 
 ## Step 1 — locate the CV
 
@@ -123,75 +123,33 @@ Writing this much without asking is deliberate and is covered by the Step 4 carv
 - `role-fit` compares the posting's implied level against `<level-slug>` and flags a mismatch in either direction.
 - `interview-prep` holds the grading bar at `<level-slug>` rather than at a hardcoded seniority.
 
-## Step 5 — resume the flow
+## Step 5 — invoke competencies skill and resume flow
 
 Immediately, in the same response, without waiting for another message:
 
 1. One line confirming what was saved, by filename.
-2. One line on what the profile is still missing: `preferences.md` entirely, and the pillar ratings in `competencies.md` (Step 4b wrote its Level section, nothing more) — and why each would help.
-3. The offer in Step 6 — one line, not a lecture.
+2. Invoke the `competencies` skill (it will run in this response, extract from the CV, present findings, and ask for validation).
+3. After competencies finishes, one line on what the profile is still missing: `preferences.md` — and why it would help (comp floor, deal-breakers, role shape).
 4. The six-option menu from `CLAUDE.md`, verbatim.
 
 The user is onboarded from this point in the session. Do not consult the boot `STATE:` line again — it was computed before the CV existed and is now stale.
 
-## Step 6 — offer to build `competencies.md` and `preferences.md`
+## Step 6 — offer to build `preferences.md` (competencies auto-handled)
 
-The CV says what the user has done. It does not say what they want next, or how hard they are willing to have a claim pushed on. Those two files carry that, and without them every downstream skill degrades in a specific way: `role-fit` cannot screen on comp, location or deal-breakers and falls back to "unassessable, flag don't guess"; `tailor-resume` and `cover-letter` have no guidance on what to lead with or what never to claim; `interview-prep` grades against the level but not against the user's own read of where they are thin.
+The CV says what the user has done; the competencies skill now assesses those against the Ravi Mehta framework automatically. But `preferences.md` is different — it holds what they want next (comp floor, location, deal-breakers, role shape), and without it `role-fit` cannot screen on any of those axes and falls back to "unassessable, flag don't guess"; `tailor-resume` and `cover-letter` have no guidance on what to lead with.
 
-So do not just note that the files are missing — **offer to build them, right here, while the CV is fresh in context.** This is the cheapest moment in the whole project to do it: the pillars can be drawn from what was just extracted rather than from a generic list.
+Do not just note that it is missing — **offer to build it right here, while the CV and competencies are fresh in context.** This is the cheapest moment in the whole project to do it.
 
-Offer once, in one line, naming both and letting the user take either or both:
+Offer once, in one line:
 
-> *Want me to build these now? Eight questions for `preferences.md`, a handful for `competencies.md` — about five minutes, and they gate every assessment from here on.*
+> *Want me to build `preferences.md` now? Eight questions, two batches of four — about five minutes, and they gate every assessment from here on.*
 
-If the user declines, proceed and do not ask again this session. `role-fit` will offer `preferences.md` again when it actually bites. If the user would rather write the files by hand, say where they go and which header line each must carry (below) so they stay machine-readable, and leave it there.
+If the user declines, proceed and do not ask again this session. `role-fit` will offer it again when it actually bites. If the user would rather write it by hand, say where it goes and the shape below so it stays machine-readable.
 
 ### `preferences.md`
 
 Do not invent a parallel question set. The canonical one lives in `role-fit`, section **3b** of `.claude/skills/role-fit/SKILL.md` — read it and use it: eight questions, two `AskUserQuestion` batches of four, concrete options rather than open prompts, and the same output structure (`**Target level:** <level-slug>` in the Role section, a **Screening rules** section that turns the answers into mechanical tests, a **Tensions** section naming answers that conflict). One question set, one file format, wherever the offer is made.
 
-The target level is the point of contact with Step 4b. The Level section in `competencies.md` holds `**Target:** unknown` until this conversation happens; once the role-shape answer lands, update that Target line in the same pass as writing `preferences.md`, so the two never disagree.
+The target level is the point of contact with `competencies.md`. The Level section in `competencies.md` holds `**Target:** unknown` until this conversation happens; once the role-shape answer lands, update that Target line in the same pass as writing `preferences.md`, so the two never disagree.
 
-### `competencies.md`
-
-This skill owns this flow. Build the pillar list from the CV just extracted — six to ten competencies the CV actually evidences, named in the user's own vocabulary, not a generic ladder. Then ask with `AskUserQuestion`, four per call:
-
-1. **Which of these would you back with a specific story under pressure?** Multi-select over the derived pillars → rated `deep`.
-2. **Which are working knowledge you would rather not be tested on?** Multi-select over the same list → rated `working`.
-3. **What should I lead with when building your case?** Single-select, options drawn from the strongest threads in the CV, e.g. commercial outcomes, platform/technical depth, people leadership, discovery rigour.
-4. **What should I never claim on your behalf?** Multi-select: domains touched but not owned, a tool used once, team size, anything the user considers overclaiming.
-
-Rules for the output:
-
-- Anything the user did not rate stays `solid — derived from CV, not self-rated`. Never silently promote an unrated pillar to `deep`; the whole value of the file is that the ratings came from the user.
-- Every pillar row carries the CV evidence it rests on, so a later assessment can cite it rather than re-deriving.
-- The calibration notes are the part other skills obey most literally ("lead with inference and serving, not reliability"), so write them as instructions, not as description.
-- The **Level** section written in Step 4b stays at the top of the file, above the pillars, and the ratings are read against it. Do not rewrite it here — Step 6 adds the pillars and calibration notes below it, and only touches Level to fill in Target.
-
-Shape (the Level section is already there from Step 4b — Step 6 adds everything below it):
-
-```markdown
-# Competencies
-
-## Level
-
-- **Current:** <level-slug>
-- **Target:** <level-slug>, from the role-shape answer
-
-### Evidence
-- <as written at intake>
-
-## Pillars
-
-| Pillar | Self-rating | Evidence in `cv.md` |
-| --- | --- | --- |
-| <pillar> | deep / solid / working | <the role and result it rests on> |
-
-## Calibration notes
-
-- **Lead with:** <what to put first in any case built for the user>
-- **Do not claim:** <the overclaims to refuse, stated plainly>
-- **Thin ice:** <what the user named as working knowledge, and how to handle it if a posting demands it>
-```
-
-Rule 6 of `CLAUDE.md` applies to both files: show the draft and get a yes before writing. The Step 4 carve-out covers the CV only — it does not extend to anything built in this step.
+Rule 6 of `CLAUDE.md` applies: show the draft and get a yes before writing.
