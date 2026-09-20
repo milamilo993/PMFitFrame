@@ -2,18 +2,14 @@
 
 PMFitFrame is a Claude Code assistant which supports PMs in the pursuit of their next role.
 
+You start by giving it your CV, then help it to quickly establish your preferences and competencies (according to Ravi Mehta framework) and from then on it accelerates your job pursuit by automating:  
+- roles screening against what you actually said you want
+- gives you an honest role fit assessment
+- tailors the CV to the job
+- drafts any communication letters
+- preps you the interview, and 
+- keeps a pipeline board published as claude html artifact to keep you organized
 
-
-
-
-
-
-
-
-
-All it takes is to give it your CV, you then help it to quickly establish your preferences and competencies (according to Ravi Mehta framework) and from then on it scales  your job pursuit. 
-
-It screens roles against what you actually said you want, writes honest role fit assessment, tailors the CV, drafts the letters, preps you the interview, and keeps a pipeline board published as claude html artifact to keep you organized.
 
 
 <!-- SCREENSHOT: the pipeline board artifact, full page -->
@@ -29,7 +25,7 @@ This project is built to fail differently:
 
 | Failure mode | What stops it here |
 | --- | --- |
-| Flattery | Every fit assessment carries an **Honest Gap Assessment** table and a verdict that is allowed to be "do not apply". A stated hard requirement you do not meet ends the assessment cleanly rather than getting talked around. |
+| Flattery | Every fit assessment carries an **Honest Gap Assessment** table and a verdict that is allowed to be "do not apply". A stated hard requirement you do not meet or a role that is clearly a red flag for you ends the assessment cleanly rather than getting talked around. |
 | Forgetting | `pm-profile/` is the source of truth about you; `job-pipeline/` is the working state. Both live on disk. Every skill reads them fresh rather than trusting the conversation. |
 | Inventing | `tailor-resume` and `cover-letter` may reorder, reframe and drop. They may not add. If the posting wants something your CV does not show, you get asked, not written around. |
 
@@ -50,9 +46,10 @@ This project is built to fail differently:
    > C:\path\to\my_resume.pdf
    ```
    It extracts the text and saves `pm-profile/cv.md` plus the original.
-5. **Review your competencies.** The system analyzes your CV against the Ravi Mehta framework (12 competencies across 4 areas), presents its findings, and asks you to validate or adjust. Based on your CV + demonstrated competencies, it deduces your seniority level. This builds `pm-profile/competencies.md` (with both your level and competencies assessment).
-And that's the whole onboarding!
 
+5. **Review your competencies.** The system analyzes your CV against the Ravi Mehta framework (12 competencies across 4 areas), presents its findings, and asks you to validate or adjust. Based on your CV + demonstrated competencies, it deduces your seniority level. This builds `pm-profile/competencies.md` (with both your level and competencies assessment). Feel free to give it more context than presented in CV, it will only work better once it has complete infomration.
+
+And that's the whole onboarding!
 From then on you are taken through the options:
 <!-- SCREENSHOT: main menu-->
 ![First session](docs/screenshots/02-first-session.png)
