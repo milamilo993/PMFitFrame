@@ -1,6 +1,6 @@
 # PMFitFrame
 
-A Claude Code project that runs a technical job search end to end: it reads your CV once, screens roles against what you actually said you want, writes the assessment, tailors the CV, drafts the letter, preps the interview, and keeps a pipeline board you can share as a link.
+A Claude Code project that helps run a technical job assessment and application end to end: it reads your CV once, understands your competencies and preferences and screens roles against what you actually said you want, writes the assessment, tailors the CV, drafts the letter, preps you for the interview, and keeps a pipeline board you can access and share as a link.
 
 It is not a chatbot that gives job search advice. It is a set of skills with hard rules, a state directory on disk, and a strong bias against telling you what you want to hear.
 
@@ -17,7 +17,7 @@ This project is built to fail differently:
 
 | Failure mode | What stops it here |
 | --- | --- |
-| Flattery | Every fit assessment carries an **Honest Gap Assessment** table and a verdict that is allowed to be "do not apply". A stated hard requirement you do not meet ends the assessment cleanly rather than getting talked around. |
+| Flattery | Every fit assessment carries an **Honest Gap Assessment** table and a verdict that is allowed to be "do not apply". A stated hard requirement you do not meet or a role that is clearly a red flag for you ends the assessment cleanly rather than getting talked around. |
 | Forgetting | `pm-profile/` is the source of truth about you; `job-pipeline/` is the working state. Both live on disk. Every skill reads them fresh rather than trusting the conversation. |
 | Inventing | `tailor-resume` and `cover-letter` may reorder, reframe and drop. They may not add. If the posting wants something your CV does not show, you get asked, not written around. |
 
@@ -38,7 +38,7 @@ This project is built to fail differently:
    > C:\path\to\my_resume.pdf
    ```
    It extracts the text and saves `pm-profile/cv.md` plus the original.
-5. **Review your competencies.** The system analyzes your CV against the Ravi Mehta framework (12 competencies across 4 areas), presents its findings, and asks you to validate or adjust. Based on your CV + demonstrated competencies, it deduces your seniority level. This builds `pm-profile/competencies.md` (with both your level and competencies assessment).
+5. **Review your competencies.** The system analyzes your CV against the Ravi Mehta framework (12 competencies across 4 areas), presents its findings, and asks you to validate or adjust. Based on your CV + demonstrated competencies, it deduces your seniority level. This builds `pm-profile/competencies.md` (with both your level and competencies assessment). Feel free to give it more context than presented in CV, it will only work better once it has complete infomration.
 6. **Paste a job description.** You get a fit assessment grounded in your level + competencies, a published page, and a pipeline entry.
 
 That is the whole onboarding. Everything else is optional depth.
