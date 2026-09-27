@@ -40,6 +40,8 @@ This project is built to fail differently:
    claude
    ```
 If you preffer to use Claude App, you can also access the repo from Code Tab, just set working directory to be PMFitFrame
+
+
  ![Claude App Set Dir](docs/screenshots/02-first-session-1.png)
 
 
@@ -58,7 +60,7 @@ From then on you are taken through the options:
 <!-- SCREENSHOT: main menu-->
 ![First session](docs/screenshots/02-main-options-claude-app.png)
 
-Where Building application materials presents you with following:
+Where `Build application materials` presents you with following:
 <!-- SCREENSHOT: Build application materials -->
 ![First session](docs/screenshots/02-first-session-2.png)
 ---
@@ -77,20 +79,20 @@ The picker carries four grouped choices — pipeline, assess a role, build appli
 
 ## The skills
 
-Ten skills live in `.claude/skills/`. Six are menu options; `cv-intake`, `competencies`, `preferences`, and `pipeline-artifacts` support onboarding and the other workflows.
+Ten skills live in `.claude/skills/`. The main menu has four choices. Three skills sit under **Build application materials**, while four supporting skills run during onboarding or from other workflows.
 
-| Skill | Triggered by | What it produces |
+| Skill | How it is accessed | What it produces |
 | --- | --- | --- |
+| **job-pipeline** | Main menu → **Check the pipeline**; or "where do things stand", or news on a role | The index and role files under `job-pipeline/`. Owns one status vocabulary, and derives the table from the status so a rejected role cannot sit in Active. |
+| **role-fit** | Main menu → **Assess a role**; a pasted posting, or "should I apply?" | `fit-assessment.md`: role deconstruction, preference screen, dimension-by-dimension fit (grounded in your level + competencies), honest gaps, bridging language, verdict. The foundation document every other skill reads first. |
+| **company-research** | Main menu → **Build application materials** → **Research the company**; or "research this company" | `company-product-analysis.md`: product, market, competitors, business model, org signals. Enough to answer "tell me about our product" in an interview. |
+| **tailor-resume** | Main menu → **Build application materials** → **Tailor the CV**; or "tailor my CV" | `cv.md` in the company folder. Reorders and reframes. Never invents. |
+| **cover-letter** | Main menu → **Build application materials** → **Write the cover letter**; or "write the cover letter" | `cover-letter.md`, five-part structure, gaps named directly rather than buried. |
+| **interview-prep** | Main menu → **Prep for an interview**; or "mock interview" | Mode A: a calibrated prep doc per stage, published as its own page. Mode B: a live turn-by-turn mock where you answer and get graded against a senior bar. Both run off a book you supply — see below. |
 | **cv-intake** | Supplying a CV in any form | `pm-profile/cv.md` (canonical text) and `cv-original.<ext>` (verbatim). Sanity-checks extraction before saving, then invokes **competencies** automatically. |
-| **competencies** | After `cv-intake` during onboarding, or anytime you want to update | `pm-profile/competencies.md`: your assessment against the Ravi Mehta 12-competency framework (Product Execution, Customer Insight, Product Strategy, Influencing People). Extracts evidence from your CV, presents findings with rationale, asks you to validate or adjust. Captures calibration notes. Invokable anytime you gain new skills/scope. |
+| **competencies** | After `cv-intake` during onboarding, or anytime you want to update it | `pm-profile/competencies.md`: your assessment against the Ravi Mehta 12-competency framework (Product Execution, Customer Insight, Product Strategy, Influencing People). Extracts evidence from your CV, presents findings with rationale, asks you to validate or adjust. Captures calibration notes. |
 | **preferences** | During onboarding, or anytime your search criteria change | `pm-profile/preferences.md`: target level, compensation floor, geography, office pattern, urgency, screening rules, and deal-breakers. |
-| **job-pipeline** | `1`, "where do things stand", or news on a role | The index and role files under `job-pipeline/`. Owns one status vocabulary, and derives the table from the status so a rejected role cannot sit in Active. |
-| **role-fit** | `2`, a pasted posting, "should I apply" | `fit-assessment.md`: role deconstruction, preference screen, dimension-by-dimension fit (grounded in your level + competencies), honest gaps, bridging language, verdict. The foundation document every other skill reads first. |
-| **company-research** | `3`, "research this company" | `company-product-analysis.md`: product, market, competitors, business model, org signals. Enough to answer "tell me about our product" in an interview. |
-| **tailor-resume** | `4`, "tailor my CV" | `cv.md` in the company folder. Reorders and reframes. Never invents. |
-| **interview-prep** | `6`, "mock interview" | Mode A: a calibrated prep doc per stage, published as its own page. Mode B: a live turn-by-turn mock where you answer and get graded against a senior bar. Both run off a book you supply — see below. |
-| **cover-letter** | `5`, "write the cover letter" | `cover-letter.md`, five-part structure, gaps named directly rather than buried. |
-| **pipeline-artifacts** | Another skill needing a refresh | The published pages: one per role document, plus the board that links them all. |
+| **pipeline-artifacts** | Automatically when another skill needs to publish or refresh an artifact | The published pages: one per role document, plus the board that links them all. |
 
 ### The interview question book
 
