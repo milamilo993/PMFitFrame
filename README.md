@@ -1,16 +1,15 @@
 # PMFitFrame
 
-PMFitFrame is a Claude Code assistant which supports PMs in the pursuit of their next role.
+PMFitFrame is a Claude Code assistant that helps product managers pursue their next role.
 
-You start by giving it your CV, then help it to quickly establish your preferences and competencies (according to Ravi Mehta framework) and from then on it accelerates your job pursuit by automating:  
-- roles screening against what you actually said you want
-- gives you an honest role fit assessment
-- tailors the CV to the job
-- drafts any communication letters
-- preps you the interview, and 
-- keeps a pipeline board published as claude html artifact to keep you organized
+Start by sharing your CV and defining your preferences and competencies. From there, PMFitFrame accelerates your job search by:
 
-
+- screening roles against what you actually want
+- providing honest role-fit assessments
+- tailoring your resume and cover letter to each role
+- drafting application and recruiter communications
+- preparing you for interviews
+- maintaining a pipeline board, published as a Claude HTML artifact, to keep your search organized
 
 <!-- SCREENSHOT: the pipeline board artifact, full page -->
 ![Pipeline board](docs/screenshots/01-pipeline-board.png)
@@ -19,7 +18,7 @@ You start by giving it your CV, then help it to quickly establish your preferenc
 
 ## Why this exists
 
-Generic AI job search help fails in three predictable ways. It flatters. It forgets. And it invents.
+Generic AI job assistant fails in three predictable ways. It flatters. It forgets. And it invents.
 
 This project is built to fail differently:
 
@@ -34,12 +33,16 @@ This project is built to fail differently:
 ## Quick start
 
 1. **Get Claude Code.** This repo is a Claude Code project, not a standalone tool.
-2. **Clone it and open a session in the project root.**
+2. **If you use Claude from the CLI, clone it and open a session in the project root.**
    ```bash
-   git clone <this-repo> PMFitFrame
+   git clone https://github.com/milamilo993/PMFitFrame.git
    cd PMFitFrame
    claude
    ```
+If you preffer to use Claude App, you can also access the repo from Code Tab, just set working directory to be PMFitFrame
+ ![Claude App Set Dir](docs/screenshots/02-first-session-1.png)
+
+
 3. **Start the conversation.** Say anything — `hi`, a question, or jump straight to sharing a CV. This triggers the boot protocol, which shows you the welcome line if no CV is on file, or the menu if one exists.
 4. **Give it your CV.** A path, an attachment, or pasted text. PDF, DOCX, DOC, Pages, RTF, TXT or MD all work.
    ```
@@ -47,24 +50,18 @@ This project is built to fail differently:
    ```
    It extracts the text and saves `pm-profile/cv.md` plus the original.
 
-5. **Review your competencies.** The system analyzes your CV against the Ravi Mehta framework (12 competencies across 4 areas), presents its findings, and asks you to validate or adjust. Based on your CV + demonstrated competencies, it deduces your seniority level. This builds `pm-profile/competencies.md` (with both your level and competencies assessment). Feel free to give it more context than presented in CV, it will only work better once it has complete infomration.
+5. **Review your competencies.** The system analyzes your CV against the Ravi Mehta framework (12 competencies across 4 main product areas), presents its findings, and asks you to validate or adjust. Based on your CV + demonstrated competencies, it deduces your seniority level. This builds `pm-profile/competencies.md` (with both your level and competencies assessment). Feel free to give it more context than presented in CV, it will only work better once it has complete infomration.
 
 And that's the whole onboarding!
+
 From then on you are taken through the options:
 <!-- SCREENSHOT: main menu-->
-![First session](docs/screenshots/02-first-session.png)
+![First session](docs/screenshots/02-main-options-claude-app.png)
 
 Where Building application materials presents you with following:
 <!-- SCREENSHOT: Build application materials -->
 ![First session](docs/screenshots/02-first-session-2.png)
 ---
-
-## How a session starts
-
-A `SessionStart` hook (`.claude/boot.sh`) checks `pm-profile/` in shell **before** Claude answers anything, and injects the result into context. The branch is decided by code, not by model judgement, so the first response is deterministic:
-
-- **No CV on file** → you get one line asking for a CV, and nothing else. No menu, no skills, no advice on a profile that does not exist.
-- **CV on file** → you get what is on file by filename, one line on anything missing (competencies assessment, preferences, etc.), then a picker to choose what to do. Open with a real request instead — a pasted posting, "research Acme" — and you get the work, not the picker.
 
 **What gets built during onboarding:**
 - `cv.md` — canonical CV text (created by `cv-intake`)
@@ -80,12 +77,13 @@ The picker carries four grouped choices — pipeline, assess a role, build appli
 
 ## The skills
 
-Eight skills in `.claude/skills/`. Six are menu options; `cv-intake` fires whenever you supply a CV, and `pipeline-artifacts` is invoked by the others.
+Ten skills live in `.claude/skills/`. Six are menu options; `cv-intake`, `competencies`, `preferences`, and `pipeline-artifacts` support onboarding and the other workflows.
 
 | Skill | Triggered by | What it produces |
 | --- | --- | --- |
-| **cv-intake** | Supplying a CV in any form | `pm-profile/cv.md` (canonical text), `cv-original.<ext>` (verbatim), and `level.md` (your `<level-slug>`, deduced from titles and described scope). Sanity-checks extraction before saving. Then invokes **competencies** skill automatically. |
+| **cv-intake** | Supplying a CV in any form | `pm-profile/cv.md` (canonical text) and `cv-original.<ext>` (verbatim). Sanity-checks extraction before saving, then invokes **competencies** automatically. |
 | **competencies** | After `cv-intake` during onboarding, or anytime you want to update | `pm-profile/competencies.md`: your assessment against the Ravi Mehta 12-competency framework (Product Execution, Customer Insight, Product Strategy, Influencing People). Extracts evidence from your CV, presents findings with rationale, asks you to validate or adjust. Captures calibration notes. Invokable anytime you gain new skills/scope. |
+| **preferences** | During onboarding, or anytime your search criteria change | `pm-profile/preferences.md`: target level, compensation floor, geography, office pattern, urgency, screening rules, and deal-breakers. |
 | **job-pipeline** | `1`, "where do things stand", or news on a role | The index and role files under `job-pipeline/`. Owns one status vocabulary, and derives the table from the status so a rejected role cannot sit in Active. |
 | **role-fit** | `2`, a pasted posting, "should I apply" | `fit-assessment.md`: role deconstruction, preference screen, dimension-by-dimension fit (grounded in your level + competencies), honest gaps, bridging language, verdict. The foundation document every other skill reads first. |
 | **company-research** | `3`, "research this company" | `company-product-analysis.md`: product, market, competitors, business model, org signals. Enough to answer "tell me about our product" in an interview. |
@@ -176,6 +174,12 @@ URLs are tracked in `*-artifact-url.txt` siblings next to each document, so noth
 ## Directory layout
 
 ```
+CLAUDE.md                      project rules and workflow routing
+README.md                      project overview and setup guide
+
+docs/
+└── screenshots/               images used in this README
+
 pm-profile/                     you — slow-changing, read-mostly, gitignored
 ├── cv.md                       canonical CV text. Every skill reads this.
 ├── cv-original.<ext>           the file you supplied, verbatim
@@ -197,8 +201,10 @@ job-pipeline/                   working state — owned by the assistant, gitign
 .claude/
 ├── boot.sh                     SessionStart hook: the profile check, in shell
 ├── settings.json               permissions and hooks
-├── statusline.sh               optional status line
-└── skills/                     the eight skills
+├── statusline.py               status line implementation
+├── statusline.sh               status line launcher
+└── skills/                     the ten workflow skills
+    └── interview-prep/docs/    interview guides and grading rubrics
 ```
 
 ### Your data stays local
@@ -248,4 +254,3 @@ Reads and writes to `pm-profile/` and `job-pipeline/` are pre-allowed, so the wo
 **Correct your level.** The **Level** section at the top of `pm-profile/competencies.md` holds one slug from a fixed, function-neutral vocabulary (`senior-ic`, `staff-ic`, `principal-ic`, `lead-ic`, `people-manager`, …) describing scope and headcount rather than a discipline, deduced from your CV, plus the target level you are aiming at. `role-fit` compares every posting's implied level against it and flags under-levelled roles and stretches; `interview-prep` holds its grading bar there. Edit that section if the deduction is wrong, and the correction propagates everywhere.
 
 **Recalibrate how claims are weighted.** `pm-profile/competencies.md` holds self-rated pillars plus calibration notes, for example "lead with inference and serving, not reliability". Assessments obey those notes.
-
